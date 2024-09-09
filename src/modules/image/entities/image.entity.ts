@@ -1,1 +1,6 @@
-export class Image {}
+import { Entity } from 'typeorm';
+
+export class Image {
+  id: number;
+  image: string;
+}

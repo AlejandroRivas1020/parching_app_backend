@@ -3,32 +3,31 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Event } from './event.entity';
+import { Category } from 'src/modules/category/entities/category.entity';
 import { AuditableEntity } from 'src/common/entities/auditable.entity';
-import { Event } from 'src/modules/event/entities/event.entity';
 import { User } from 'src/modules/user/entities/user.entity';
 
-@Entity('comments')
-export class Comment extends AuditableEntity {
+@Entity('events_categories')
+export class EventCategory extends AuditableEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'text' })
-  content: string;
-
-  @Column({ type: 'uuid', name: 'events_id' })
+  @Column({ name: 'events_id', type: 'uuid' })
   eventId: string;
 
-  @ManyToOne(() => Event, (event) => event.comments)
+  @ManyToOne(() => Event)
+  @JoinColumn({ name: 'events_id' })
   event: Event;
 
-  @ManyToOne(() => Comment, (parent) => parent.subComment)
-  comment: Comment;
+  @Column({ name: 'categories_id', type: 'uuid' })
+  categoryId: string;
 
-  @OneToMany(() => Comment, (comment) => comment.comment)
-  subComment: Comment[];
+  @ManyToOne(() => Category)
+  @JoinColumn({ name: 'categories_id' })
+  category: Category;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'created_by' })

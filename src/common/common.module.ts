@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuditableEntity } from './entities/auditable.entity';
 
-@Module({})
+@Module({ imports: [TypeOrmModule.forFeature([AuditableEntity])] })
 export class CommonModule {}
