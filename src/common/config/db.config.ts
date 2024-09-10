@@ -10,9 +10,13 @@ export const getDbConfig = (
   username: configService.get<string>('DB_USERNAME'),
   password: configService.get<string>('DB_PASSWORD'),
   database: configService.get<string>('DB_NAME'),
-  entities: ['dist/**/*.entity{.ts,.js}'],
-  synchronize: false,
+  entities: ['dist/*/.entity{.ts,.js}'],
+  autoLoadEntities: true,
+  synchronize: true,
   ssl: {
     rejectUnauthorized: false,
   },
+  logging: false,
 });
+
+// 'dist/*/.entity{.ts,.js}'

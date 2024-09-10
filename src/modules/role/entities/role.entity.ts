@@ -1,9 +1,10 @@
 import { Permission } from 'src/modules/permission/entities/permission.entity';
 import { User } from 'src/modules/user/entities/user.entity';
 import { PrimaryGeneratedColumn, Column, Entity, OneToMany } from 'typeorm';
+import { AuditableEntity } from '../../../common/entities/auditable.entity';
 
 @Entity('roles')
-export class Role {
+export class Role extends AuditableEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

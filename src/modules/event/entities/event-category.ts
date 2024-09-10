@@ -15,17 +15,17 @@ export class EventCategory extends AuditableEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'events_id', type: 'uuid' })
+  @Column({ name: 'event_id', type: 'uuid' })
   eventId: string;
 
-  @ManyToOne(() => Event)
-  @JoinColumn({ name: 'events_id' })
+  @ManyToOne(() => Event, (event) => event.eventsCategories)
+  @JoinColumn({ name: 'event_id' })
   event: Event;
 
   @Column({ name: 'categories_id', type: 'uuid' })
   categoryId: string;
 
-  @ManyToOne(() => Category)
+  @ManyToOne(() => Category, (category) => category.eventsCategories)
   @JoinColumn({ name: 'categories_id' })
   category: Category;
 
@@ -34,6 +34,6 @@ export class EventCategory extends AuditableEntity {
   createdBy: User;
 
   @ManyToOne(() => User)
-  @JoinColumn({ name: 'created_by' })
+  @JoinColumn({ name: 'updated_by' })
   updatedBy: User;
 }

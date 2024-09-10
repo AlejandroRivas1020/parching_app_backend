@@ -28,19 +28,19 @@ export class User extends AuditableEntity {
   profilePicture: string;
 
   @Column({ type: 'uuid', name: 'roles_id' })
-  roleId: number;
+  roleId: string;
 
   @ManyToOne(() => Role, (role) => role.users, { eager: true })
-  @JoinColumn({ name: 'roles_id' })
+  @JoinColumn({ name: 'role_id' })
   role: Role;
 
   @Column({ nullable: true, name: 'clients_id' })
-  clientId?: number;
+  clientId?: string;
 
   @OneToOne(() => Client, (client) => client.user, {
     eager: true,
     nullable: true,
   })
-  @JoinColumn({ name: 'clients_id' })
+  @JoinColumn({ name: 'client_id' })
   client?: Client;
 }

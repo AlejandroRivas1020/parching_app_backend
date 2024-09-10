@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 
 import { Path } from './path.entity';
-import { Role } from 'src/modules/role/entities/role.entity';
+import { Role } from '../../role/entities/role.entity';
 import { AuditableEntity } from 'src/common/entities/auditable.entity';
 
 @Entity('permissions')

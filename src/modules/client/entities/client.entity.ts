@@ -7,9 +7,10 @@ import {
 } from 'typeorm';
 import { Gender } from '../enums/gender.enum';
 import { User } from 'src/modules/user/entities/user.entity';
+import { AuditableEntity } from 'src/common/entities/auditable.entity';
 
 @Entity('clients')
-export class Client {
+export class Client extends AuditableEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

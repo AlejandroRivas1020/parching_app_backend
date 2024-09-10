@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { AuditableEntity } from 'src/common/entities/auditable.entity';
 import { Permission } from './permission.entity';
+import { AuditableEntity } from 'src/common/entities/auditable.entity';
 
 @Entity('paths')
 export class Path extends AuditableEntity {

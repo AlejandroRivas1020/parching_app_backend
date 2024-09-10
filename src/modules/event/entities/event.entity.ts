@@ -35,12 +35,13 @@ export class Event extends AuditableEntity {
   hostId: string;
 
   @ManyToOne(() => User)
+  @JoinColumn({ name: 'host_id' })
   host: User;
 
   @OneToMany(() => EventCategory, (eventCategory) => eventCategory.event)
-  eventsCategories: EventCategory;
+  eventsCategories: EventCategory[];
 
-  @OneToMany(() => Comment, (event) => event.comment)
+  @OneToMany(() => Comment, (comment) => comment.event)
   comments: Comment[];
 
   @ManyToOne(() => User)
@@ -48,6 +49,6 @@ export class Event extends AuditableEntity {
   createdBy: User;
 
   @ManyToOne(() => User)
-  @JoinColumn({ name: 'created_by' })
+  @JoinColumn({ name: 'updated_by' })
   updatedBy: User;
 }

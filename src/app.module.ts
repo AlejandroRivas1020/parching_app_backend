@@ -11,7 +11,7 @@ import { EventModule } from './modules/event/event.module';
 import { CommentModule } from './modules/comment/comment.module';
 import { ImageModule } from './modules/image/image.module';
 import { CommonModule } from './common/common.module';
-import { validationSchema } from './common/config/env.config';
+// import { validationSchema } from './common/config/env.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { getDbConfig } from './common/config/db.config';
 import { CategoryModule } from './modules/category/category.module';
@@ -28,9 +28,11 @@ import { FormTemplateModule } from './modules/form-template/form-template.module
     CommentModule,
     ImageModule,
     CommonModule,
+    CategoryModule,
+    FormTemplateModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      validationSchema,
+      // validationSchema,
       envFilePath: '.env',
     }),
     TypeOrmModule.forRootAsync({
@@ -38,8 +40,6 @@ import { FormTemplateModule } from './modules/form-template/form-template.module
       inject: [ConfigService],
       useFactory: getDbConfig,
     }),
-    CategoryModule,
-    FormTemplateModule,
   ],
   controllers: [AppController],
   providers: [AppService],
