@@ -5,10 +5,12 @@ import {
   JoinColumn,
   Entity,
   OneToOne,
+  OneToMany,
 } from 'typeorm';
 import { Role } from '../../role/entities/role.entity';
 import { Client } from 'src/modules/client/entities/client.entity';
 import { AuditableEntity } from 'src/common/entities/auditable.entity';
+import { Notification } from 'src/modules/notifications/entities/notification.entity';
 
 @Entity('users')
 export class User extends AuditableEntity {
@@ -43,4 +45,14 @@ export class User extends AuditableEntity {
   })
   @JoinColumn({ name: 'client_id' })
   client?: Client;
+
+  // campos para notificaciones
+  @Column({ default: true })
+  emailNotifications: boolean;
+
+  @Column({ default: true })
+  platformNotifications: boolean;
+
+  @OneToMany(() => Notification, (notification) => notification.user)
+  notifications: Notification[];
 }

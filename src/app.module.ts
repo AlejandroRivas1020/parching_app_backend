@@ -34,8 +34,8 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
     NotificationsModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      // validationSchema,
       envFilePath: '.env',
+      // validationSchema,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
