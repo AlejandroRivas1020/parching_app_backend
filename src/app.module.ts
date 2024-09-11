@@ -16,6 +16,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { getDbConfig } from './common/config/db.config';
 import { CategoryModule } from './modules/category/category.module';
 import { FormTemplateModule } from './modules/form-template/form-template.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { FormTemplateModule } from './modules/form-template/form-template.module
     CommonModule,
     CategoryModule,
     FormTemplateModule,
+    NotificationsModule,
     ConfigModule.forRoot({
       isGlobal: true,
       // validationSchema,
