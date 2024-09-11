@@ -34,7 +34,7 @@ export const getEventReminderTemplate = (eventName: string, date: string) => `
   </div>
 `;
 
-// Plantilla para notificación de bienvenida ( aun no implementada )
+// Plantilla para notificación de bienvenida
 export const getWelcomeEmailTemplate = (userName: string) => `
   <div style="font-family: Arial, sans-serif; font-size: 16px;">
     <h2>Welcome, ${userName}!</h2>

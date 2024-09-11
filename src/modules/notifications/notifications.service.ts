@@ -25,7 +25,7 @@ export class NotificationsService {
     private readonly notificationRepository: Repository<Notification>,
     @InjectQueue('notification') private notificationQueue: Queue,
   ) {
-    // Configuración del transportador de Nodemailer
+    // Configuración de Nodemailer
     this.transporter = nodemailer.createTransport({
       host: this.configService.get<string>('EMAIL_HOST'),
       port: this.configService.get<number>('EMAIL_PORT'),
@@ -37,7 +37,7 @@ export class NotificationsService {
     });
   }
 
-  // Enviar correo electrónico usando plantillas HTML
+  // Enviar correo electrónico usando plantillas
   async sendEmail(
     to: string,
     subject: string,
@@ -47,7 +47,7 @@ export class NotificationsService {
       from: this.configService.get<string>('EMAIL_FROM'),
       to,
       subject,
-      html: htmlContent, // Aquí pasamos la plantilla HTML
+      html: htmlContent, // Aquí la plantilla HTML
     };
 
     try {

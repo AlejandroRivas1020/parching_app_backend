@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { User } from '../../user/entities/user.entity'; // Asegúrate de tener la entidad User definida correctamente
+import { User } from '../../user/entities/user.entity';
 
 @Entity()
 export class Notification {
