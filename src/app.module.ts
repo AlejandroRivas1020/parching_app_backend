@@ -9,14 +9,14 @@ import { RoleModule } from './modules/role/role.module';
 import { PermissionModule } from './modules/permission/permission.module';
 import { EventModule } from './modules/event/event.module';
 import { CommentModule } from './modules/comment/comment.module';
-import { ImageModule } from './modules/image/image.module';
 import { CommonModule } from './common/common.module';
-// import { validationSchema } from './common/config/env.config';
+import { validationSchema } from './common/config/env.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { getDbConfig } from './common/config/db.config';
 import { CategoryModule } from './modules/category/category.module';
 import { FormTemplateModule } from './modules/form-template/form-template.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
+
 
 @Module({
   imports: [
@@ -27,13 +27,15 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
     PermissionModule,
     EventModule,
     CommentModule,
-    ImageModule,
     CommonModule,
     CategoryModule,
     FormTemplateModule,
     NotificationsModule,
     ConfigModule.forRoot({
       isGlobal: true,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validationSchema,
       envFilePath: '.env',
       // validationSchema,
     }),
