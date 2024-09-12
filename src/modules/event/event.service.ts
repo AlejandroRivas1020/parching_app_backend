@@ -4,7 +4,24 @@ import { UpdateEventDto } from './dto/update-event.dto';
 
 @Injectable()
 export class EventService {
-  create(createEventDto: CreateEventDto) {
+  create(createEventDto: CreateEventDto, userId: string) {
+    const {
+      startDate,
+      endDate,
+      capacity,
+      location,
+      information,
+      categories,
+      isAdmin,
+      host,
+      images,
+    } = createEventDto;
+
+    if (isAdmin && host) {
+      console.log('uwu');
+    } else {
+      console.log('yes');
+    }
     return 'This action adds a new event';
   }
 
