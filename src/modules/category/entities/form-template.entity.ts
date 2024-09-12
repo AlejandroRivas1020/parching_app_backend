@@ -24,5 +24,5 @@ export class FormTemplate extends AuditableEntity {
   category: Category;
 
   @Column({ type: 'json' })
-  form: any;
+  form: Record<string, any>;
 }

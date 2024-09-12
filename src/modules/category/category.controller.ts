@@ -5,11 +5,20 @@ import {
   AddFormTemplateDto,
   type UpdateCategoryDto,
 } from './dto';
+import { ApiTags } from '@nestjs/swagger';
+import {
+  CreateCategory,
+  GetCategories,
+  GetCategory,
+  UpdateCategory,
+} from './docs/category';
 
+@ApiTags('Categories')
 @Controller('categories')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
+  @CreateCategory()
   @Post()
   create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoryService.create(createCategoryDto);
@@ -20,16 +29,19 @@ export class CategoryController {
     return this.categoryService.addNewFormTemplate(addTemplateDto);
   }
 
+  @GetCategories()
   @Get()
   findAll() {
     return this.categoryService.findAll();
   }
 
+  @GetCategory()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.categoryService.findOne(id);
   }
 
+  @UpdateCategory()
   @Patch()
   update(@Body() updateDto: UpdateCategoryDto) {
     return this.categoryService.update(updateDto);
