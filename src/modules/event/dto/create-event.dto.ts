@@ -44,11 +44,7 @@ export class CreateEventDto {
 
   @IsNotEmpty()
   @IsUUID()
-  host: string;
-
-  @IsOptional()
-  @IsUUID()
-  createdBy?: string;
+  host?: string;
 
   @IsArray()
   @ArrayNotEmpty()
