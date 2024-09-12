@@ -14,9 +14,7 @@ import { validationSchema } from './common/config/env.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { getDbConfig } from './common/config/db.config';
 import { CategoryModule } from './modules/category/category.module';
-import { FormTemplateModule } from './modules/form-template/form-template.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
-
 
 @Module({
   imports: [
@@ -29,10 +27,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
     CommentModule,
     CommonModule,
     CategoryModule,
-    FormTemplateModule,
     NotificationsModule,
-    ConfigModule.forRoot({
-      isGlobal: true,
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema,

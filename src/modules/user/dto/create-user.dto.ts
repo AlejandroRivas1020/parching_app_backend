@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsEmail,
   IsOptional,
   IsString,
@@ -30,4 +31,10 @@ export class CreateUserDto {
   @IsOptional()
   @IsUUID()
   clienteId: string;
+
+  @IsBoolean()
+  emailNotifications: boolean;
+
+  @IsBoolean()
+  platformNotifications: boolean;
 }
