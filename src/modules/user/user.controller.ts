@@ -43,4 +43,17 @@ export class UserController {
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.userService.remove(id);
   }
+
+  // Endpoint para actualizar las notificaciones
+  @Patch(':id/notification-preferences')
+  updateNotificationPreferences(
+    @Param('id') id: string,
+    @Body()
+    preferences: {
+      emailNotifications: boolean;
+      platformNotifications: boolean;
+    },
+  ) {
+    return this.userService.updateNotificationPreferences(id, preferences);
+  }
 }
