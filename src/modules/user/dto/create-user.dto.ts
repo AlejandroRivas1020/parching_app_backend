@@ -30,7 +30,7 @@ export class CreateUserDto {
 
   @IsOptional()
   @IsUUID()
-  clienteId: string;
+  clientId: string;
 
   @IsBoolean()
   emailNotifications: boolean;
