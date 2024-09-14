@@ -23,7 +23,7 @@ export class User extends AuditableEntity {
   @Column({ type: 'varchar', length: 100 })
   email: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'varchar', length: 255 })
   password: string;
 
   @Column({ type: 'text', name: 'profile_picture' })
