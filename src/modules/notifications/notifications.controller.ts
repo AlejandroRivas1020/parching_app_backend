@@ -2,7 +2,7 @@ import { Controller, Post, Body, Get, Param, Patch } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 
-@ApiTags('notifications')  // Agrupa los endpoints de notificaciones en Swagger
+@ApiTags('notifications') // Agrupa los endpoints de notificaciones en Swagger
 @Controller('notifications')
 export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
@@ -80,8 +80,13 @@ export class NotificationsController {
 
   // Endpoint para obtener todas las notificaciones internas de un usuario
   @Get(':userId')
-  @ApiOperation({ summary: 'Obtener todas las notificaciones internas de un usuario' })
-  @ApiResponse({ status: 200, description: 'Notificaciones obtenidas correctamente.' })
+  @ApiOperation({
+    summary: 'Obtener todas las notificaciones internas de un usuario',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Notificaciones obtenidas correctamente.',
+  })
   @ApiResponse({ status: 404, description: 'Usuario no encontrado.' })
   async getNotifications(@Param('userId') userId: string) {
     return this.notificationsService.getNotificationsByUser(userId);
