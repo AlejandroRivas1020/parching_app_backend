@@ -31,6 +31,9 @@ export class Event extends AuditableEntity {
   @Column({ type: 'json' })
   information: Record<string, any>;
 
+  @Column({ type: 'float', default: 0 })
+  score: number;
+
   @Column({ name: 'host_id', type: 'uuid' })
   hostId: string;
 

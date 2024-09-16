@@ -23,20 +23,20 @@ export class User extends AuditableEntity {
   @Column({ type: 'varchar', length: 100 })
   email: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'varchar', length: 255 })
   password: string;
 
   @Column({ type: 'text', name: 'profile_picture' })
   profilePicture: string;
 
-  @Column({ type: 'uuid', name: 'roles_id' })
+  @Column({ type: 'uuid', name: 'role_id' })
   roleId: string;
 
   @ManyToOne(() => Role, (role) => role.users, { eager: true })
   @JoinColumn({ name: 'role_id' })
   role: Role;
 
-  @Column({ nullable: true, name: 'clients_id' })
+  @Column({ nullable: true, name: 'client_id' })
   clientId?: string;
 
   @OneToOne(() => Client, (client) => client.user, {

@@ -7,10 +7,17 @@ import { EventImage } from './entities/event-image';
 import { EventCategory } from './entities/event-category';
 import { User } from '../user/entities/user.entity';
 import { UserModule } from '../user/user.module';
+import { Category } from '../category/entities';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Event, EventImage, EventCategory, User]),
+    TypeOrmModule.forFeature([
+      Event,
+      EventImage,
+      EventCategory,
+      User,
+      Category,
+    ]),
     UserModule,
   ],
   controllers: [EventController],

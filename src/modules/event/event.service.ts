@@ -4,7 +4,8 @@ import { UpdateEventDto } from './dto/update-event.dto';
 import { User } from '../user/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Event } from './entities/event.entity';
-import type { Repository } from 'typeorm';
+import { In, type Repository } from 'typeorm';
+import { Category } from '../category/entities';
 
 @Injectable()
 export class EventService {
@@ -13,6 +14,8 @@ export class EventService {
     private readonly eventRepository: Repository<Event>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>,
   ) {}
 
   async create(createEventDto: CreateEventDto, userId: string) {
@@ -40,9 +43,48 @@ export class EventService {
       console.log(eventHost);
     } else {
       eventHost = createdBy;
-      console.log('yes');
     }
+
+    const eventCategories = await this.categoryRepository.findBy({
+      id: In(categories),
+    });
+    await this.createEvent(
+      createdBy,
+      eventHost,
+      startDate,
+      endDate,
+      capacity,
+      location,
+      information,
+      eventCategories,
+      images,
+    );
+
     return 'This action adds a new event';
+  }
+
+  private async createEvent(
+    createdBy: User,
+    host: User,
+    startDate: Date,
+    endDate: Date,
+    capacity: number,
+    location: string,
+    information: Record<string, any>,
+    categories: Category[],
+    images: string[],
+  ) {
+    console.log({
+      createdBy,
+      host,
+      startDate,
+      endDate,
+      capacity,
+      information,
+      categories,
+      images,
+      location,
+    });
   }
 
   findAll() {
@@ -54,14 +96,12 @@ export class EventService {
   }
 
   update(id: number, updateEventDto: UpdateEventDto) {
+    console.log(updateEventDto);
+
     return `This action updates a #${id} event`;
   }
 
   remove(id: number) {
     return `This action removes a #${id} event`;
-  }
-
-  private async createEvent(dto: CreateEventDto) {
-    console.log(dto);
   }
 }
