@@ -5,9 +5,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Event } from './entities/event.entity';
 import { EventImage } from './entities/event-image';
 import { EventCategory } from './entities/event-category';
+import { User } from '../user/entities/user.entity';
+import { UserModule } from '../user/user.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Event, EventImage, EventCategory])],
+  imports: [
+    TypeOrmModule.forFeature([Event, EventImage, EventCategory, User]),
+    UserModule,
+  ],
   controllers: [EventController],
   providers: [EventService],
 })

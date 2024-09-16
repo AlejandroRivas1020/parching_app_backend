@@ -29,7 +29,7 @@ export class Event extends AuditableEntity {
   location: string;
 
   @Column({ type: 'json' })
-  information: any;
+  information: Record<string, any>;
 
   @Column({ name: 'host_id', type: 'uuid' })
   hostId: string;
