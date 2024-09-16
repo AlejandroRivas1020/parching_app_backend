@@ -16,6 +16,7 @@ import { getDbConfig } from './common/config/db.config';
 import { CategoryModule } from './modules/category/category.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
+import { SeedersModule } from './modules/seeders/seeders.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
     CommonModule,
     CategoryModule,
     NotificationsModule,
+    SeedersModule,
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema,

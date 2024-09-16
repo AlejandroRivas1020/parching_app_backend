@@ -14,13 +14,13 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-@ApiTags('upload') // Grupo de Swagger para "upload"
+@ApiTags('Upload IMGs') // Grupo de Swagger para "upload"
 @Controller('upload')
 export class CloudinaryController {
   constructor(private readonly cloudinaryService: CloudinaryService) {}
 
   @Post('/image')
-  @ApiOperation({ summary: 'Subir una imagen a Cloudinary' })
+  @ApiOperation({ summary: 'Upload an image to Cloudinary' })
   @ApiConsumes('multipart/form-data') // Para que Swagger reconozca el tipo de dato
   @ApiBody({
     schema: {
