@@ -2,14 +2,14 @@ import { Controller, Post, Body, Get, Param, Patch } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 
-@ApiTags('notifications') // Agrupa los endpoints de notificaciones en Swagger
+@ApiTags('Notifications') // Agrupa los endpoints de notificaciones en Swagger
 @Controller('notifications')
 export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
 
   // Endpoint para enviar una notificación por correo
   @Post('send-email')
-  @ApiOperation({ summary: 'Enviar notificación por correo electrónico' })
+  @ApiOperation({ summary: 'Send notification by Email' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -34,7 +34,7 @@ export class NotificationsController {
 
   // Endpoint para enviar un correo de verificación
   @Post('send-verification-email')
-  @ApiOperation({ summary: 'Enviar correo de verificación de cuenta' })
+  @ApiOperation({ summary: 'Send verification Email' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -59,7 +59,7 @@ export class NotificationsController {
 
   // Endpoint para enviar un correo de bienvenida
   @Post('send-welcome-email')
-  @ApiOperation({ summary: 'Enviar correo de bienvenida' })
+  @ApiOperation({ summary: 'Send wellcome Email' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -81,7 +81,7 @@ export class NotificationsController {
   // Endpoint para obtener todas las notificaciones internas de un usuario
   @Get(':userId')
   @ApiOperation({
-    summary: 'Obtener todas las notificaciones internas de un usuario',
+    summary: 'Get all notifications of a client',
   })
   @ApiResponse({
     status: 200,
@@ -94,7 +94,7 @@ export class NotificationsController {
 
   // Endpoint para marcar una notificación como leída
   @Patch(':notificationId/read')
-  @ApiOperation({ summary: 'Marcar una notificación como leída' })
+  @ApiOperation({ summary: 'Mark as read a notification' })
   @ApiResponse({ status: 200, description: 'Notificación marcada como leída.' })
   @ApiResponse({ status: 404, description: 'Notificación no encontrada.' })
   async markAsRead(@Param('notificationId') notificationId: string) {
