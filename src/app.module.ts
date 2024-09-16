@@ -15,6 +15,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { getDbConfig } from './common/config/db.config';
 import { CategoryModule } from './modules/category/category.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
+import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
       inject: [ConfigService],
       useFactory: getDbConfig,
     }),
+    CloudinaryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

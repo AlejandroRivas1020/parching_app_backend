@@ -5,16 +5,20 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api');  // Prefijo global para los endpoints
 
+  // Swagger
   const config = new DocumentBuilder()
     .setTitle('ParchingApp Documentation')
+    .setDescription('API para gestionar notificaciones y subir imágenes usando Cloudinary')
     .setVersion('1.0')
+    .addTag('upload')  // tag para subida de imagenes
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document);
+  SwaggerModule.setup('api/docs', app, document);  // La documentación en /api/docs
 
+  // Configuración global de validación
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -23,9 +27,11 @@ async function bootstrap() {
     }),
   );
 
+  // Inicialización de la aplicación
   const logger = new Logger('Bootstrap');
   const port = 3000;
   await app.listen(port);
   logger.log(`Application is running on port ${port}`);
+  logger.log(`Swagger documentation available at http://localhost:${port}/api/docs`);
 }
 bootstrap();
