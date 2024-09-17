@@ -1,6 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { User } from '../../user/entities/user.entity';
-import { ApiProperty } from '@nestjs/swagger'; // Swagger import
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('notifications')
 export class Notification {
@@ -33,6 +39,6 @@ export class Notification {
   isRead: boolean;
 
   @ManyToOne(() => User, (user) => user.notifications, { eager: true })
-  @ApiProperty({ description: 'Usuario asociado a la notificación' })
+  @JoinColumn({ name: 'user_id' })
   user: User;
 }
