@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, In } from 'typeorm';
-import { Category } from '../category/entities/category.entity'; // Ajusta la ruta según tu estructura
+import { Repository } from 'typeorm';
+import { Category } from '../category/entities/category.entity';
 
 @Injectable()
 export class CategorySeeder {
@@ -22,25 +22,23 @@ export class CategorySeeder {
       { name: 'Medio Ambiente y Sostenibilidad' },
     ];
 
-    // Obtener los nombres de las categorías existentes
-    const existingCategories = await this.categoryRepository.find({
-      where: { name: In(categories.map((category) => category.name)) },
-    });
+    for (const category of categories) {
+      const normalizedCategoryName = category.name.toLowerCase().trim();
+      const exists = await this.categoryRepository.findOne({
+        where: { name: normalizedCategoryName },
+      });
 
-    // Crear un conjunto de nombres existentes para comparación rápida
-    const existingCategoryNames = new Set(
-      existingCategories.map((category) => category.name),
-    );
+      if (!exists) {
+        const newCategory = this.categoryRepository.create({
+          ...category,
+          name: normalizedCategoryName,
+        });
 
-    // Filtrar las categorías que no existen
-    const newCategories = categories.filter(
-      (category) => !existingCategoryNames.has(category.name),
-    );
-
-    // Crear y guardar las nuevas categorías en una sola operación
-    if (newCategories.length > 0) {
-      const createdCategories = this.categoryRepository.create(newCategories);
-      await this.categoryRepository.save(createdCategories);
+        await this.categoryRepository.save(newCategory);
+        console.log(`Category '${category.name}' has been added.`);
+      } else {
+        console.log(`Category '${category.name}' already exists.`);
+      }
     }
   }
 }
