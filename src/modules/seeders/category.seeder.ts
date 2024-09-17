@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Category } from '../category/entities/category.entity'; // Ajusta la ruta según tu estructura
+import { Category } from '../category/entities/category.entity';
 
 @Injectable()
 export class CategorySeeder {
@@ -23,12 +23,21 @@ export class CategorySeeder {
     ];
 
     for (const category of categories) {
+      const normalizedCategoryName = category.name.toLowerCase().trim();
       const exists = await this.categoryRepository.findOne({
-        where: { name: category.name },
+        where: { name: normalizedCategoryName },
       });
+
       if (!exists) {
-        const newCategory = this.categoryRepository.create(category);
+        const newCategory = this.categoryRepository.create({
+          ...category,
+          name: normalizedCategoryName,
+        });
+
         await this.categoryRepository.save(newCategory);
+        console.log(`Category '${category.name}' has been added.`);
+      } else {
+        console.log(`Category '${category.name}' already exists.`);
       }
     }
   }

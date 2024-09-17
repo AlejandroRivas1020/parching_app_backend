@@ -11,7 +11,7 @@ export class RoleSeeder {
   ) {}
 
   async seed() {
-    const roles = [{ name: 'admin' }, { name: 'currentUser' }];
+    const roles = [{ name: 'admin' }, { name: 'client' }];
 
     for (const role of roles) {
       const exists = await this.roleRepository.findOne({
