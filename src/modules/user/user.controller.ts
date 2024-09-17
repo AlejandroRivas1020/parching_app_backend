@@ -7,10 +7,13 @@ import {
   Param,
   Delete,
   ParseUUIDPipe,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('user')
 export class UserController {
@@ -55,5 +58,18 @@ export class UserController {
     },
   ) {
     return this.userService.updateNotificationPreferences(id, preferences);
+  }
+
+  @Patch(':id/profile-picture')
+  @UseInterceptors(FileInterceptor('file'))
+  async updateProfilePicture(
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    const updatedUser = await this.userService.updateUserProfilePicture(
+      id,
+      file,
+    );
+    return updatedUser;
   }
 }
