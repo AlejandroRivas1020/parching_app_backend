@@ -10,6 +10,7 @@ import { AuditableEntity } from 'src/common/entities/auditable.entity';
 import { User } from 'src/modules/user/entities/user.entity';
 import { EventCategory } from './event-category';
 import { Comment } from 'src/modules/comment/entities/comment.entity';
+import { EventImage } from './event-image';
 
 @Entity('events')
 export class Event extends AuditableEntity {
@@ -44,7 +45,10 @@ export class Event extends AuditableEntity {
   @OneToMany(() => EventCategory, (eventCategory) => eventCategory.event)
   eventsCategories: EventCategory[];
 
-  @OneToMany(() => Comment, (comment) => comment.event)
+  @ManyToOne(() => EventImage, (image) => image.event, { eager: true })
+  images: EventImage[];
+
+  @OneToMany(() => Comment, (comment) => comment.event, { nullable: true })
   comments: Comment[];
 
   @ManyToOne(() => User)

@@ -1,11 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { In, type Repository } from 'typeorm';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { User } from '../user/entities/user.entity';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Event } from './entities/event.entity';
-import { In, type Repository } from 'typeorm';
 import { Category } from '../category/entities';
+import { EventImage } from './entities/event-image';
 
 @Injectable()
 export class EventService {
@@ -16,6 +17,8 @@ export class EventService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
+    @InjectRepository(EventImage)
+    private readonly eventImageRepository: Repository<EventImage>,
   ) {}
 
   async create(createEventDto: CreateEventDto, userId: string) {
@@ -33,14 +36,13 @@ export class EventService {
 
     const createdBy = await this.userRepository.findOneBy({ id: userId });
 
-    if (!createdBy) throw new BadRequestException('User not found');
+    if (!createdBy) throw new BadRequestException('User admin not found');
 
     let eventHost: User;
 
     if (isAdmin && host) {
       eventHost = await this.userRepository.findOneBy({ id: host });
-      if (!eventHost) throw new BadRequestException('User not found');
-      console.log(eventHost);
+      if (!eventHost) throw new BadRequestException('User client not found');
     } else {
       eventHost = createdBy;
     }
@@ -48,7 +50,8 @@ export class EventService {
     const eventCategories = await this.categoryRepository.findBy({
       id: In(categories),
     });
-    await this.createEvent(
+
+    return await this.createEvent(
       createdBy,
       eventHost,
       startDate,
@@ -59,8 +62,6 @@ export class EventService {
       eventCategories,
       images,
     );
-
-    return 'This action adds a new event';
   }
 
   private async createEvent(
@@ -74,17 +75,30 @@ export class EventService {
     categories: Category[],
     images: string[],
   ) {
-    console.log({
-      createdBy,
-      host,
+    console.log({ startDate, endDate });
+
+    const event = this.eventRepository.create({
       startDate,
       endDate,
       capacity,
-      information,
-      categories,
-      images,
       location,
+      information,
+      host,
+      createdBy,
+      eventsCategories: categories,
+      updatedBy: createdBy,
     });
+
+    event.images = images.map((i) =>
+      this.eventImageRepository.create({
+        image: i,
+        event,
+        createdBy,
+        updatedBy: createdBy,
+      }),
+    );
+
+    return await this.eventRepository.save(event);
   }
 
   findAll() {

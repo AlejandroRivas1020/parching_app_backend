@@ -21,7 +21,10 @@ export class EventController {
   @CreateEvent()
   @Post()
   create(@Body() createEventDto: CreateEventDto) {
-    return this.eventService.create(createEventDto, 'hello world');
+    return this.eventService.create(
+      createEventDto,
+      '058369ed-b031-4978-b736-33e47034fb15',
+    );
   }
 
   @Get()
