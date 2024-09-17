@@ -27,9 +27,9 @@ export class CreateNotificationDto {
   userId: string;
 
   @IsBoolean()
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Si la notificación ha sido leída',
     example: false,
   })
-  isRead: boolean;
+  isRead?: boolean; // Lo dejamos opcional, por si no se proporciona
 }
