@@ -6,17 +6,19 @@ import { AdminSeeder } from './admin.seeder'; // Importa el AdminSeeder
 import { Category } from '../category/entities/category.entity';
 import { Role } from '../role/entities/role.entity';
 import { User } from '../user/entities/user.entity'; // Importa la entidad de usuario
+import { ClientSeeder } from './client.seeder';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Category, Role, User])],
-  providers: [CategorySeeder, RoleSeeder, AdminSeeder],
-  exports: [CategorySeeder, RoleSeeder, AdminSeeder],
+  providers: [CategorySeeder, RoleSeeder, AdminSeeder, ClientSeeder],
+  exports: [CategorySeeder, RoleSeeder, AdminSeeder, ClientSeeder],
 })
 export class SeedersModule implements OnModuleInit {
   constructor(
     private readonly categorySeeder: CategorySeeder,
     private readonly roleSeeder: RoleSeeder,
-    private readonly AdminSeeder: AdminSeeder,
+    private readonly adminSeeder: AdminSeeder,
+    private readonly clientSeeder: ClientSeeder,
   ) {}
 
   async onModuleInit() {
@@ -25,7 +27,8 @@ export class SeedersModule implements OnModuleInit {
     // Ejecutar los seeders
     await this.categorySeeder.seed();
     await this.roleSeeder.seed();
-    await this.AdminSeeder.seed();
+    await this.adminSeeder.seed();
+    await this.clientSeeder.seed();
 
     console.log('Seeders completed.');
   }
