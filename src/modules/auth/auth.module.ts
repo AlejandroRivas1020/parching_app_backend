@@ -7,6 +7,7 @@ import { Client } from '../client/entities/client.entity';
 import { JwtStrategy } from './jwt.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { Role } from '../role/entities/role.entity';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { Role } from '../role/entities/role.entity';
       secret: 'diciembre31',
       signOptions: { expiresIn: '1h' },
     }),
+    NotificationsModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],

@@ -8,14 +8,19 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/login-user-dto';
 import { Role } from '../role/entities/role.entity';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class AuthService {
+  private readonly defaultProfilePictureUrl =
+    'http://res.cloudinary.com/djsxw9zeu/image/upload/v1726387092/uploads/ii1aj8mocqb2mrcryif8.jpg';
+
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Client) private clientRepository: Repository<Client>,
     @InjectRepository(Role) private roleRepository: Repository<Role>,
     private jwtService: JwtService,
+    private notificationService: NotificationsService,
   ) {}
 
   async register(registerUserDto: RegisterUserDto): Promise<User> {
@@ -23,12 +28,20 @@ export class AuthService {
       name,
       email,
       password,
-      profilePicture,
       birthDate,
       gender,
       address,
       locationDescription,
     } = registerUserDto;
+
+    // Verificar si ya existe un usuario con el mismo email
+    const existingUser = await this.userRepository.findOne({
+      where: { email },
+    });
+
+    if (existingUser) {
+      throw new UnauthorizedException('Email is already registered.');
+    }
 
     // Encriptar la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -41,7 +54,7 @@ export class AuthService {
       name,
       email,
       password: hashedPassword,
-      profilePicture,
+      profilePicture: this.defaultProfilePictureUrl,
       roleId: role.id,
     });
 
@@ -60,6 +73,22 @@ export class AuthService {
 
     // Guardar el cliente en la base de datos
     await this.clientRepository.save(newClient);
+
+    const token = this.jwtService.sign({
+      id: savedUser.id,
+      email: savedUser.email,
+    });
+
+    await this.notificationService.sendVerificationEmail(
+      savedUser.email,
+      savedUser.id,
+      token,
+    );
+
+    await this.notificationService.sendWelcomeEmail(
+      savedUser.email,
+      savedUser.name,
+    );
 
     return savedUser;
   }
