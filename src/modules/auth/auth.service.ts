@@ -43,6 +43,15 @@ export class AuthService {
       throw new UnauthorizedException('Email is already registered.');
     }
 
+    // Validar la contraseña
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      throw new UnauthorizedException(
+        'Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character (@$!%*?&).',
+      );
+    }
+
     // Encriptar la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -100,13 +109,16 @@ export class AuthService {
 
   async login(loginUserDto: LoginUserDto): Promise<{ accessToken: string }> {
     const { email, password } = loginUserDto;
-    const user = await this.userRepository.findOne({ where: { email } });
+    const user = await this.userRepository.findOne({
+      where: { email },
+      relations: ['role'],
+    });
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const payload = { sub: user.id, email: user.email };
+    const payload = { sub: user.id, email: user.email, roleId: user.roleId };
     const accessToken = this.jwtService.sign(payload);
 
     return { accessToken };
