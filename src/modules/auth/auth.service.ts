@@ -47,7 +47,12 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     //Buscar role por defecto cuando se registra con el nombre "user"
-    const role = await this.roleRepository.findOne({ where: { name: 'user' } });
+    const role = await this.roleRepository.findOne({
+      where: { name: 'client' },
+    });
+    if (!role) {
+      throw new Error('Role "client" not found');
+    }
 
     // Crear el usuario
     const newUser = this.userRepository.create({
@@ -68,7 +73,7 @@ export class AuthService {
       address,
       locationDescription,
       score: 0, // Puntuación inicial
-      userId: savedUser.id,
+      user: savedUser,
     });
 
     // Guardar el cliente en la base de datos
