@@ -22,7 +22,7 @@ import {
   ApiBody,
 } from '@nestjs/swagger';
 
-@ApiTags('user')
+@ApiTags('User')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -72,11 +72,21 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'User updated successfully.' })
   @ApiResponse({ status: 400, description: 'Bad request.' })
   @ApiResponse({ status: 404, description: 'User not found.' })
-  update(
+  @UseInterceptors(FileInterceptor('file'))
+  async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
+    @UploadedFile() file: Express.Multer.File,
   ) {
-    return this.userService.update(id, updateUserDto);
+    const updatedUser = await this.userService.update(id, updateUserDto);
+
+    if (file) {
+      const userWithUpdatedProfilePicture =
+        await this.userService.updateUserProfilePicture(id, file);
+      return userWithUpdatedProfilePicture;
+    }
+
+    return updatedUser;
   }
 
   @Delete(':id')
@@ -118,31 +128,5 @@ export class UserController {
     },
   ) {
     return this.userService.updateNotificationPreferences(id, preferences);
-  }
-
-  @Patch(':id/profile-picture')
-  @ApiOperation({ summary: 'Update user profile picture' })
-  @ApiParam({
-    name: 'id',
-    type: String,
-    description: 'User ID',
-    example: '123e4567-e89b-12d3-a456-426614174000',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Profile picture updated successfully.',
-  })
-  @ApiResponse({ status: 404, description: 'User not found.' })
-  @ApiResponse({ status: 400, description: 'Bad request.' })
-  @UseInterceptors(FileInterceptor('file'))
-  async updateProfilePicture(
-    @Param('id') id: string,
-    @UploadedFile() file: Express.Multer.File,
-  ) {
-    const updatedUser = await this.userService.updateUserProfilePicture(
-      id,
-      file,
-    );
-    return updatedUser;
   }
 }

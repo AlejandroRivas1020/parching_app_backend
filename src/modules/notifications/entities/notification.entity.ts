@@ -12,28 +12,28 @@ import { ApiProperty } from '@nestjs/swagger';
 export class Notification {
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty({
-    description: 'ID único de la notificación',
+    description: 'Unique ID of the notification',
     example: '123e4567-e89b-12d3-a456-426614174000',
   })
   id: string;
 
   @Column()
   @ApiProperty({
-    description: 'Título de la notificación',
-    example: 'Actualización de evento',
+    description: 'Title of the notification',
+    example: 'Event Update',
   })
   title: string;
 
   @Column()
   @ApiProperty({
-    description: 'Mensaje de la notificación',
-    example: 'El evento ha cambiado de fecha.',
+    description: 'Notification message',
+    example: 'The event has changed date.',
   })
   message: string;
 
   @Column({ default: false })
   @ApiProperty({
-    description: 'Si la notificación ha sido leída',
+    description: 'If the notification has been read',
     example: false,
   })
   isRead: boolean;

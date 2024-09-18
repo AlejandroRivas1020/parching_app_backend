@@ -43,9 +43,17 @@ export class AuthService {
       throw new UnauthorizedException('Email is already registered.');
     }
 
+    // Validar el nombre (solo letras y espacios)
+    const nameRegex = /^[a-zA-Z\s]+$/;
+    if (!nameRegex.test(name)) {
+      throw new UnauthorizedException(
+        'Name must contain only letters and spaces.',
+      );
+    }
+
     // Validar la contraseña
     const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&+-.])[A-Za-z\d@$!%*?&+-.]{8,}$/;
     if (!passwordRegex.test(password)) {
       throw new UnauthorizedException(
         'Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character (@$!%*?&).',
@@ -88,15 +96,21 @@ export class AuthService {
     // Guardar el cliente en la base de datos
     await this.clientRepository.save(newClient);
 
-    const token = this.jwtService.sign({
-      id: savedUser.id,
-      email: savedUser.email,
-    });
+    const token = this.jwtService.sign(
+      {
+        id: savedUser.id,
+        email: savedUser.email,
+      },
+      { expiresIn: '1h' },
+    );
+
+    console.log(token);
+
+    const verificationUrl = `${process.env.BACKEND_URL}/auth/verify-email?token=${token}`;
 
     await this.notificationService.sendVerificationEmail(
       savedUser.email,
-      savedUser.id,
-      token,
+      verificationUrl,
     );
 
     await this.notificationService.sendWelcomeEmail(
@@ -114,6 +128,10 @@ export class AuthService {
       relations: ['role'],
     });
 
+    if (!user.email_confirmed) {
+      throw new UnauthorizedException('Email not verified.');
+    }
+
     if (!user || !(await bcrypt.compare(password, user.password))) {
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -122,5 +140,34 @@ export class AuthService {
     const accessToken = this.jwtService.sign(payload);
 
     return { accessToken };
+  }
+
+  async verifyEmailToken(token: string): Promise<void> {
+    try {
+      const payload = this.jwtService.verify(token, {
+        secret: process.env.JWT_SECRET,
+      });
+
+      const user = await this.userRepository.findOne({
+        where: { id: payload.id },
+      });
+      if (!user) {
+        throw new UnauthorizedException('User not found.');
+      }
+
+      if (user.email_confirmed) {
+        throw new UnauthorizedException('User is already active.');
+      }
+
+      // Marcar al usuario como activo
+      user.email_confirmed = true;
+      await this.userRepository.save(user);
+    } catch (error) {
+      throw new UnauthorizedException(
+        error.name === 'TokenExpiredError'
+          ? 'Token has expired.'
+          : 'Invalid or expired token.',
+      );
+    }
   }
 }

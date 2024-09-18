@@ -52,4 +52,10 @@ export class User extends AuditableEntity {
 
   @OneToMany(() => Notification, (notification) => notification.user)
   notifications: Notification[];
+
+  @Column({ default: false })
+  email_confirmed: boolean;
+
+  @Column({ default: true })
+  isActive: boolean;
 }

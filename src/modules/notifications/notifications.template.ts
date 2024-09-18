@@ -7,7 +7,7 @@ export const getNotificationEmailTemplate = (message: string) => `
 `;
 
 // Plantilla para notificación de verificación de correo electrónico
-export const getVerificationEmailTemplate = (token: string, userId: string) => `
+export const getVerificationEmailTemplate = (token: string) => `
   <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
     <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden;">
       <div style="background-color: #4CAF50; color: #ffffff; padding: 20px; text-align: center;">
@@ -17,7 +17,7 @@ export const getVerificationEmailTemplate = (token: string, userId: string) => `
         <p style="font-size: 18px;">Hello,</p>
         <p style="font-size: 16px;">Please verify your email address by clicking the button below:</p>
         <div style="text-align: center; margin: 20px 0;">
-          <a href="https://yourapp.com/verify-email?token=${token}&userId=${userId}" 
+          <a href="${token}" 
              style="background-color: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-size: 16px;">
             Verify Email
           </a>

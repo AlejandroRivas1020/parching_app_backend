@@ -5,31 +5,31 @@ export class CreateNotificationDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
-    description: 'Título de la notificación',
-    example: 'Actualización de evento',
+    description: 'Title of the notification',
+    example: 'Event Update',
   })
   title: string;
 
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
-    description: 'Mensaje de la notificación',
-    example: 'El evento ha cambiado de fecha.',
+    description: 'Notification message',
+    example: 'The event has changed date.',
   })
   message: string;
 
   @IsUUID()
   @ApiPropertyOptional({ example: '123e4567-e89b-12d3-a456-426614174000' })
   @ApiProperty({
-    description: 'ID del usuario al que pertenece la notificación',
+    description: 'ID of the user who owns the notification',
     example: '123e4567-e89b-12d3-a456-426614174000',
   })
   userId: string;
 
   @IsBoolean()
   @ApiPropertyOptional({
-    description: 'Si la notificación ha sido leída',
+    description: 'If the notification has been read',
     example: false,
   })
-  isRead?: boolean; // Lo dejamos opcional, por si no se proporciona
+  isRead?: boolean;
 }
