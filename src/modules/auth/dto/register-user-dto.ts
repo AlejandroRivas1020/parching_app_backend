@@ -33,12 +33,12 @@ export class RegisterUserDto {
   @IsNotEmpty()
   password: string;
 
-  @ApiProperty({
-    description: "URL or base64 encoded string of the user's profile picture",
-    example: 'https://example.com/profile.jpg',
-  })
-  @IsString()
-  profilePicture: string;
+  // @ApiProperty({
+  //   description: "URL or base64 encoded string of the user's profile picture",
+  //   example: 'https://example.com/profile.jpg',
+  // })
+  // @IsString()
+  // profilePicture: string;
 
   @ApiProperty({
     description: 'Address of the user',

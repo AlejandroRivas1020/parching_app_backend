@@ -36,14 +36,7 @@ export class User extends AuditableEntity {
   @JoinColumn({ name: 'role_id' })
   role: Role;
 
-  @Column({ nullable: true, name: 'client_id' })
-  clientId?: string;
-
-  @OneToOne(() => Client, (client) => client.user, {
-    eager: true,
-    nullable: true,
-  })
-  @JoinColumn({ name: 'client_id' })
+  @OneToOne(() => Client, (client) => client.user)
   client?: Client;
 
   // campos para notificaciones
