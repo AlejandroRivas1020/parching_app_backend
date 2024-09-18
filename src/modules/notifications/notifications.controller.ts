@@ -21,9 +21,9 @@ export class NotificationsController {
   @ApiOperation({ summary: 'Create platform notification' })
   @ApiResponse({
     status: 201,
-    description: 'Notificación creada exitosamente.',
+    description: 'Notification created successfully.',
   })
-  @ApiResponse({ status: 404, description: 'Usuario no encontrado.' })
+  @ApiResponse({ status: 404, description: 'User not found.' })
   async createNotification(
     @Body() createNotificationDto: CreateNotificationDto,
   ) {
@@ -37,9 +37,9 @@ export class NotificationsController {
   @ApiOperation({ summary: 'Send event update notification' })
   @ApiResponse({
     status: 201,
-    description: 'Notificación de actualización de evento enviada.',
+    description: 'Event update notification sent.',
   })
-  @ApiResponse({ status: 404, description: 'Evento no encontrado.' })
+  @ApiResponse({ status: 404, description: 'Event not found.' })
   async sendEventUpdate(
     @Param('eventId') eventId: string,
     @Body('message') message: string,
@@ -53,8 +53,8 @@ export class NotificationsController {
   // Endpoint para enviar un recordatorio de evento un día antes
   @Post('send-event-reminder/:eventId')
   @ApiOperation({ summary: 'Send event reminder notification' })
-  @ApiResponse({ status: 201, description: 'Recordatorio enviado.' })
-  @ApiResponse({ status: 404, description: 'Evento no encontrado.' })
+  @ApiResponse({ status: 201, description: 'Reminder sent.' })
+  @ApiResponse({ status: 404, description: 'Event not found.' })
   async sendEventReminder(@Param('eventId') eventId: string) {
     return this.notificationsService.sendEventReminder(eventId);
   }
@@ -66,7 +66,7 @@ export class NotificationsController {
   })
   @ApiResponse({
     status: 200,
-    description: 'Notificaciones obtenidas correctamente.',
+    description: 'Notifications received successfully.',
   })
   async getNotifications(@Param('userId') userId: string) {
     return this.notificationsService.getNotificationsByUser(userId);
@@ -75,8 +75,8 @@ export class NotificationsController {
   // Marcar una notificación como leída
   @Patch(':notificationId/read')
   @ApiOperation({ summary: 'Mark a notification as read' })
-  @ApiResponse({ status: 200, description: 'Notificación marcada como leída.' })
-  @ApiResponse({ status: 404, description: 'Notificación no encontrada.' })
+  @ApiResponse({ status: 200, description: 'Notification marked as read.' })
+  @ApiResponse({ status: 404, description: 'Notification not found.' })
   async markAsRead(@Param('notificationId') notificationId: string) {
     return this.notificationsService.markAsRead(notificationId);
   }
@@ -84,8 +84,8 @@ export class NotificationsController {
   // Endpoint para enviar un correo de bienvenida
   @Post('send-welcome-email')
   @ApiOperation({ summary: 'Send welcome email' })
-  @ApiResponse({ status: 201, description: 'Correo de bienvenida enviado.' })
-  @ApiResponse({ status: 500, description: 'Error enviando correo.' })
+  @ApiResponse({ status: 201, description: 'Welcome email sent.' })
+  @ApiResponse({ status: 500, description: 'Error sending mail.' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -109,8 +109,8 @@ export class NotificationsController {
   // Endpoint para enviar un correo de verificación
   @Post('send-verification-email')
   @ApiOperation({ summary: 'Send verification email' })
-  @ApiResponse({ status: 201, description: 'Correo de verificación enviado.' })
-  @ApiResponse({ status: 500, description: 'Error enviando correo.' })
+  @ApiResponse({ status: 201, description: 'Verification email sent.' })
+  @ApiResponse({ status: 500, description: 'Error sending mail.' })
   @ApiBody({
     schema: {
       type: 'object',
