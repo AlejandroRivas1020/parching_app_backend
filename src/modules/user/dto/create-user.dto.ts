@@ -1,12 +1,15 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
   IsEmail,
-  IsOptional,
   IsString,
   IsUUID,
   MinLength,
+  IsDateString,
+  IsNumber,
+  IsEnum,
 } from 'class-validator';
+import { Gender } from 'src/modules/client/enums/gender.enum';
 
 export class CreateUserDto {
   @ApiProperty({
@@ -49,14 +52,6 @@ export class CreateUserDto {
   @IsUUID()
   roleId: string;
 
-  @ApiPropertyOptional({
-    description: 'Client ID associated with the user (optional)',
-    example: 'bff1e7d4-6c24-4b6d-9e87-6b73247d03f0',
-  })
-  @IsOptional()
-  @IsUUID()
-  clientId: string;
-
   @ApiProperty({
     description: 'Whether the user receives email notifications',
     example: true,
@@ -70,4 +65,39 @@ export class CreateUserDto {
   })
   @IsBoolean()
   platformNotifications: boolean;
+
+  @ApiProperty({
+    description: 'Birthdate of the client',
+    example: '1990-05-12',
+  })
+  @IsDateString()
+  birthDate: string;
+
+  @ApiProperty({
+    description: 'Gender of the client',
+    example: 'male',
+  })
+  @IsEnum(Gender) // Asegúrate de que sea un valor del enum Gender
+  gender: Gender;
+
+  @ApiProperty({
+    description: 'Address of the client',
+    example: '123 Main St, Springfield',
+  })
+  @IsString()
+  address: string;
+
+  @ApiProperty({
+    description: 'Location description of the client',
+    example: 'Near the central park',
+  })
+  @IsString()
+  locationDescription: string;
+
+  @ApiProperty({
+    description: 'Score of the client',
+    example: 4.5,
+  })
+  @IsNumber()
+  score: number;
 }

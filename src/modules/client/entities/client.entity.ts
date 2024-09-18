@@ -29,10 +29,7 @@ export class Client extends AuditableEntity {
   @Column({ type: 'float' })
   score: number;
 
-  @Column({ type: 'int', name: 'users_id' })
-  userId: string;
-
   @OneToOne(() => User, (user) => user.client)
-  @JoinColumn({ name: 'users_id' })
+  @JoinColumn({ name: 'user_id' })
   user: User;
 }
