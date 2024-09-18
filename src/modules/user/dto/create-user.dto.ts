@@ -100,4 +100,7 @@ export class CreateUserDto {
   })
   @IsNumber()
   score: number;
+
+  @IsBoolean()
+  email_confirmied: boolean;
 }
