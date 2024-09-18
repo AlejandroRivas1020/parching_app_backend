@@ -135,7 +135,6 @@ export class NotificationsController {
     }
     return this.notificationsService.sendVerificationEmail(
       email,
-      userId,
       verificationToken,
     );
   }
