@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Category } from '../category/entities/category.entity';
 
 @Injectable()
 export class CategorySeeder {
+  private readonly logger = new Logger(CategorySeeder.name);
+
   constructor(
     @InjectRepository(Category)
     private categoryRepository: Repository<Category>,
@@ -35,9 +37,9 @@ export class CategorySeeder {
         });
 
         await this.categoryRepository.save(newCategory);
-        console.log(`Category '${category.name}' has been added.`);
+        this.logger.log(`Category '${category.name}' has been added.`);
       } else {
-        console.log(`Category '${category.name}' already exists.`);
+        this.logger.log(`Category '${category.name}' already exists.`);
       }
     }
   }

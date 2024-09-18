@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../user/entities/user.entity';
@@ -7,6 +7,8 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class ClientSeeder {
+  private readonly logger = new Logger(ClientSeeder.name);
+
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
@@ -39,9 +41,9 @@ export class ClientSeeder {
       });
 
       await this.userRepository.save(newclient);
-      console.log('client user created successfully.');
+      this.logger.log('Client user created successfully.');
     } else {
-      console.log('client user already exists.');
+      this.logger.log('Client user already exists.');
     }
   }
 }
