@@ -5,7 +5,7 @@ export class CreateNotificationDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
-    description: 'Notification title',
+    description: 'Title of the notification',
     example: 'Event Update',
   })
   title: string;
@@ -14,7 +14,7 @@ export class CreateNotificationDto {
   @IsNotEmpty()
   @ApiProperty({
     description: 'Notification message',
-    example: 'The event has changed...',
+    example: 'The event has changed date.',
   })
   message: string;
 
