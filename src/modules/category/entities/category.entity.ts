@@ -7,8 +7,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { AuditableEntity } from '../../../common/entities/auditable.entity';
-import { EventCategory } from 'src/modules/event/entities/event-category';
 import { FormTemplate } from './form-template.entity';
+import { EventCategory } from 'src/modules/event/entities/event-category.entity';
 
 @Entity('categories')
 export class Category extends AuditableEntity {

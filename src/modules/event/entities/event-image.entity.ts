@@ -17,12 +17,12 @@ export class EventImage extends AuditableEntity {
   @Column({ type: 'varchar', length: 250 })
   image: string;
 
+  @Column({ name: 'events_id' })
+  eventId: string;
+
   @ManyToOne(() => Event, (event) => event.images)
   @JoinColumn({ name: 'events_id' })
   event: Event;
-
-  @Column({ name: 'events_id' })
-  eventId: string;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'created_by' })

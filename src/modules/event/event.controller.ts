@@ -23,7 +23,7 @@ export class EventController {
   create(@Body() createEventDto: CreateEventDto) {
     return this.eventService.create(
       createEventDto,
-      '058369ed-b031-4978-b736-33e47034fb15',
+      'f0c40224-469d-4d93-a191-81f19177c75f',
     );
   }
 
@@ -34,12 +34,12 @@ export class EventController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.eventService.findOne(+id);
+    return this.eventService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {
-    return this.eventService.update(+id, updateEventDto);
+    return this.eventService.update(id, updateEventDto);
   }
 
   @Delete(':id')

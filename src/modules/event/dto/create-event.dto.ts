@@ -20,7 +20,7 @@ export class CreateEventDto {
     example: '2024-12-01T14:00:00',
   })
   @IsNotEmpty()
-  @Transform(() => Date)
+  @Transform(({ value }) => new Date(value))
   startDate: Date;
 
   @ApiProperty({
@@ -28,7 +28,7 @@ export class CreateEventDto {
     example: '2024-12-01T16:00:00',
   })
   @IsNotEmpty()
-  @Transform(() => Date)
+  @Transform(({ value }) => new Date(value))
   endDate: Date;
 
   @ApiProperty({
