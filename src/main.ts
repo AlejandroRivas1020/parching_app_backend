@@ -19,7 +19,6 @@ async function bootstrap() {
       'API para gestionar notificaciones y subir imágenes usando Cloudinary',
     )
     .setVersion('1.0')
-    .addTag('upload') // tag para subida de imagenes
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

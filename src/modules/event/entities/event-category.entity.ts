@@ -18,7 +18,7 @@ export class EventCategory extends AuditableEntity {
   @Column({ name: 'event_id', type: 'uuid' })
   eventId: string;
 
-  @ManyToOne(() => Event, (event) => event.eventsCategories)
+  @ManyToOne(() => Event, (event) => event.eventCategories)
   @JoinColumn({ name: 'event_id' })
   event: Event;
 

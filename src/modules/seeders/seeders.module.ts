@@ -1,4 +1,4 @@
-import { Module, OnModuleInit } from '@nestjs/common';
+import { Module, OnModuleInit, Logger } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategorySeeder } from './category.seeder';
 import { RoleSeeder } from './role.seeder';
@@ -14,6 +14,8 @@ import { ClientSeeder } from './client.seeder';
   exports: [CategorySeeder, RoleSeeder, AdminSeeder, ClientSeeder],
 })
 export class SeedersModule implements OnModuleInit {
+  private readonly logger = new Logger(SeedersModule.name);
+
   constructor(
     private readonly categorySeeder: CategorySeeder,
     private readonly roleSeeder: RoleSeeder,
@@ -22,7 +24,7 @@ export class SeedersModule implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    console.log('Running seeders...');
+    this.logger.log('Running seeders...');
 
     // Ejecutar los seeders
     await this.categorySeeder.seed();
@@ -30,6 +32,6 @@ export class SeedersModule implements OnModuleInit {
     await this.adminSeeder.seed();
     await this.clientSeeder.seed();
 
-    console.log('Seeders completed.');
+    this.logger.log('Seeders completed.');
   }
 }

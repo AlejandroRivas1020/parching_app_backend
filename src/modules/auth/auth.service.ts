@@ -43,9 +43,17 @@ export class AuthService {
       throw new UnauthorizedException('Email is already registered.');
     }
 
+    // Validar el nombre (solo letras y espacios)
+    const nameRegex = /^[a-zA-Z\s]+$/;
+    if (!nameRegex.test(name)) {
+      throw new UnauthorizedException(
+        'Name must contain only letters and spaces.',
+      );
+    }
+
     // Validar la contraseña
     const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&+-.])[A-Za-z\d@$!%*?&+-.]{8,}$/;
     if (!passwordRegex.test(password)) {
       throw new UnauthorizedException(
         'Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character (@$!%*?&).',
@@ -88,12 +96,6 @@ export class AuthService {
     // Guardar el cliente en la base de datos
     await this.clientRepository.save(newClient);
 
-<<<<<<< Updated upstream
-    const token = this.jwtService.sign({
-      id: savedUser.id,
-      email: savedUser.email,
-    });
-=======
     const token = this.jwtService.sign(
       {
         id: savedUser.id,
@@ -102,12 +104,10 @@ export class AuthService {
     );
 
     const verificationUrl = `${process.env.BACKEND_URL}/auth/verify-email?token=${token}`;
->>>>>>> Stashed changes
 
     await this.notificationService.sendVerificationEmail(
       savedUser.email,
-      savedUser.id,
-      token,
+      verificationUrl,
     );
 
     // await this.notificationService.sendWelcomeEmail(
@@ -125,6 +125,10 @@ export class AuthService {
       relations: ['role'],
     });
 
+    if (!user.email_confirmed) {
+      throw new UnauthorizedException('Email not verified.');
+    }
+
     if (!user || !(await bcrypt.compare(password, user.password))) {
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -134,8 +138,6 @@ export class AuthService {
 
     return { accessToken };
   }
-<<<<<<< Updated upstream
-=======
 
   async verifyEmailToken(token: string): Promise<void> {
     try {
@@ -158,7 +160,9 @@ export class AuthService {
       user.email_confirmed = true;
       await this.userRepository.save(user);
 
+
       await this.notificationService.sendWelcomeEmail(user.email, user.name);
+
     } catch (error) {
       throw new UnauthorizedException(
         error.name === 'TokenExpiredError'
@@ -167,5 +171,4 @@ export class AuthService {
       );
     }
   }
->>>>>>> Stashed changes
 }

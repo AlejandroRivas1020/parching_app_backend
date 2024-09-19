@@ -1,9 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DataSource } from 'typeorm';
+import { Repository, DataSource, type QueryRunner } from 'typeorm';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { Category, FormTemplate } from './entities';
 import type { AddFormTemplateDto, UpdateCategoryDto } from './dto';
+import { Transactional } from 'src/common/decorators/transactional.decorator';
 
 @Injectable()
 export class CategoryService {
@@ -15,30 +16,23 @@ export class CategoryService {
     private readonly dataSource: DataSource,
   ) {}
 
-  async create(createCategoryDto: CreateCategoryDto) {
+  @Transactional()
+  async create(
+    createCategoryDto: CreateCategoryDto,
+    queryRunner?: QueryRunner,
+  ) {
     const { name, formTemplate } = createCategoryDto;
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
 
-    try {
-      const newCategory = queryRunner.manager.create(Category, { name });
-      await queryRunner.manager.save(Category, newCategory);
+    const newCategory = queryRunner.manager.create(Category, { name });
+    await queryRunner.manager.save(Category, newCategory);
 
-      const newFormTemplate = queryRunner.manager.create(FormTemplate, {
-        form: formTemplate,
-        category: newCategory,
-        isActive: true,
-      });
-      await queryRunner.manager.save(FormTemplate, newFormTemplate);
-      await queryRunner.commitTransaction();
-      return await this.categoryRepository.findOneBy({ id: newCategory.id });
-    } catch (error) {
-      await queryRunner.rollbackTransaction();
-      throw new BadRequestException(error);
-    } finally {
-      await queryRunner.release();
-    }
+    const newFormTemplate = queryRunner.manager.create(FormTemplate, {
+      form: formTemplate,
+      category: newCategory,
+      isActive: true,
+    });
+    await queryRunner.manager.save(FormTemplate, newFormTemplate);
+    return await this.categoryRepository.findOneBy({ id: newCategory.id });
   }
 
   async addNewFormTemplate(addFormDto: AddFormTemplateDto) {

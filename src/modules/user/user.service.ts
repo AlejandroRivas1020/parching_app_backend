@@ -19,7 +19,6 @@ export class UserService {
 
   // Método para crear un usuario y su cliente asociado
   async create(createUserDto: CreateUserDto) {
-    // Crear el usuario a partir del DTO
     const user = this.userRepository.create(createUserDto);
     const savedUser = await this.userRepository.save(user);
 
