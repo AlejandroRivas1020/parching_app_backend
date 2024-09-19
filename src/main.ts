@@ -8,7 +8,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api'); // Prefijo global para los endpoints
 
   app.enableCors({
-    origin: 'https://your-frontend-domain.com', // Reemplaza con el dominio de tu frontend
+    origin: 'http://localhost:3000', // Reemplaza con el dominio de tu frontend
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
