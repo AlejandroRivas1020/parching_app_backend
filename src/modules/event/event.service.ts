@@ -1,10 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { In, Repository, DataSource, type QueryRunner } from 'typeorm';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
+import { User } from '../user/entities/user.entity';
+import { Event } from './entities/event.entity';
+import { Category } from '../category/entities';
+import { EventImage } from './entities/event-image.entity';
+import { EventCategory } from './entities/event-category.entity';
+import { Transactional } from 'src/common/decorators/transactional.decorator';
 
 @Injectable()
 export class EventService {
-  create(createEventDto: CreateEventDto, userId: string) {
+  constructor(
+    @InjectRepository(Event)
+    private readonly eventRepository: Repository<Event>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>,
+    private readonly dataSource: DataSource,
+  ) {}
+
+  async create(createEventDto: CreateEventDto, userId: string) {
     const {
       startDate,
       endDate,
@@ -17,24 +35,99 @@ export class EventService {
       images,
     } = createEventDto;
 
+    const createdBy = await this.userRepository.findOneBy({ id: userId });
+
+    if (!createdBy) throw new BadRequestException('User admin not found');
+
+    let eventHost: User;
+
     if (isAdmin && host) {
-      console.log('uwu');
+      eventHost = await this.userRepository.findOneBy({ id: host });
+      if (!eventHost) throw new BadRequestException('User client not found');
     } else {
-      console.log('yes');
+      eventHost = createdBy;
     }
-    return 'This action adds a new event';
+
+    const eventCategories = await this.categoryRepository.findBy({
+      id: In(categories),
+    });
+
+    return await this.createEvent(
+      createdBy,
+      eventHost,
+      startDate,
+      endDate,
+      capacity,
+      location,
+      information,
+      eventCategories,
+      images,
+    );
   }
 
-  findAll() {
-    return `This action returns all event`;
+  @Transactional()
+  private async createEvent(
+    createdBy: User,
+    host: User,
+    startDate: Date,
+    endDate: Date,
+    capacity: number,
+    location: string,
+    information: Record<string, any>,
+    categories: Category[],
+    images: string[],
+    queryRunner?: QueryRunner,
+  ) {
+    const event = queryRunner.manager.create(Event, {
+      startDate,
+      endDate,
+      capacity,
+      location,
+      information,
+      host,
+      createdBy,
+      updatedBy: createdBy,
+    });
+
+    await queryRunner.manager.save(event);
+
+    const eventCategories = categories.map((c) =>
+      queryRunner.manager.create(EventCategory, {
+        category: c,
+        event: event,
+        createdBy,
+        updatedBy: createdBy,
+      }),
+    );
+
+    await queryRunner.manager.save(eventCategories);
+
+    const eventImages = images.map((i) =>
+      queryRunner.manager.create(EventImage, {
+        image: i,
+        event,
+        createdBy,
+        updatedBy: createdBy,
+      }),
+    );
+
+    await queryRunner.manager.save(eventImages);
+
+    return 'Event created successfully';
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} event`;
+  async findAll() {
+    return await this.eventRepository.find();
   }
 
-  update(id: number, updateEventDto: UpdateEventDto) {
-    return `This action updates a #${id} event`;
+  async findOne(id: string) {
+    return await this.eventRepository.findOneBy({ id });
+  }
+
+  update(id: string, updateEventDto: UpdateEventDto) {
+    console.log(updateEventDto);
+
+    return `This action updates a ${id} event`;
   }
 
   remove(id: number) {

@@ -48,6 +48,7 @@ export class CreateCategoryDto {
 
   @ApiPropertyOptional({
     description: 'Template is active or not',
+    example: true,
   })
   @IsOptional()
   @IsBoolean()

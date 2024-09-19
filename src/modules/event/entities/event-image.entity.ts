@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { AuditableEntity } from 'src/common/entities/auditable.entity';
 import { User } from 'src/modules/user/entities/user.entity';
+import { Event } from './event.entity';
 
 @Entity('events-images')
 export class EventImage extends AuditableEntity {
@@ -15,6 +16,13 @@ export class EventImage extends AuditableEntity {
 
   @Column({ type: 'varchar', length: 250 })
   image: string;
+
+  @Column({ name: 'events_id' })
+  eventId: string;
+
+  @ManyToOne(() => Event, (event) => event.images)
+  @JoinColumn({ name: 'events_id' })
+  event: Event;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'created_by' })
