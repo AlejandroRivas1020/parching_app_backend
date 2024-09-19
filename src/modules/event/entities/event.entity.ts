@@ -12,6 +12,7 @@ import { EventCategory } from './event-category.entity';
 import { Comment } from 'src/modules/comment/entities/comment.entity';
 import { EventImage } from './event-image.entity';
 import { EventUser } from './event-user.entity';
+import { EventState } from '../enums/event-state.enum';
 
 @Entity('events')
 export class Event extends AuditableEntity {
@@ -35,6 +36,13 @@ export class Event extends AuditableEntity {
 
   @Column({ type: 'float', default: 0 })
   score: number;
+
+  @Column({
+    type: 'enum',
+    enum: EventState,
+    default: EventState.active,
+  })
+  state: EventState;
 
   @Column({ name: 'host_id', type: 'uuid' })
   hostId: string;
