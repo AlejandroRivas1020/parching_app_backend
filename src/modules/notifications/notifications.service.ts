@@ -227,11 +227,10 @@ export class NotificationsService {
   // Método para enviar correo de verificación
   async sendVerificationEmail(
     email: string,
-    userId: string,
     verificationToken: string,
   ): Promise<void> {
     const subject = 'Verify Your Email';
-    const htmlContent = getVerificationEmailTemplate(verificationToken, userId); // Utilizando el template de verificación
+    const htmlContent = getVerificationEmailTemplate(verificationToken); // Utilizando el template de verificación
 
     await this.sendEmail(email, subject, htmlContent);
   }

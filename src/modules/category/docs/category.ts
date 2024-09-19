@@ -1,12 +1,27 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
-import { CreateCategoryDto, UpdateCategoryDto } from '../dto';
+import {
+  AddFormTemplateDto,
+  CreateCategoryDto,
+  UpdateCategoryDto,
+} from '../dto';
 
 export function CreateCategory() {
   return applyDecorators(
     ApiOperation({ summary: 'Create a category' }),
     ApiResponse({ status: 200, description: 'Category created' }),
     ApiBody({ type: CreateCategoryDto }),
+  );
+}
+
+export function CreateFormTemplate() {
+  return applyDecorators(
+    ApiOperation({ summary: 'Add a form template to a category' }),
+    ApiResponse({
+      status: 200,
+      description: 'Form template added to category',
+    }),
+    ApiBody({ type: AddFormTemplateDto }),
   );
 }
 

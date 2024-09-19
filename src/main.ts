@@ -7,6 +7,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api'); // Prefijo global para los endpoints
 
+  app.enableCors({
+    origin: 'http://localhost:3000', // Reemplaza con el dominio de tu frontend
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  });
   // Swagger
   const config = new DocumentBuilder()
     .setTitle('ParchingApp Documentation')
@@ -14,7 +19,6 @@ async function bootstrap() {
       'API para gestionar notificaciones y subir imágenes usando Cloudinary',
     )
     .setVersion('1.0')
-    .addTag('upload') // tag para subida de imagenes
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

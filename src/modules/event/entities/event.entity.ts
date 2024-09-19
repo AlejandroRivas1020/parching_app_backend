@@ -8,8 +8,10 @@ import {
 } from 'typeorm';
 import { AuditableEntity } from 'src/common/entities/auditable.entity';
 import { User } from 'src/modules/user/entities/user.entity';
-import { EventCategory } from './event-category';
+import { EventCategory } from './event-category.entity';
 import { Comment } from 'src/modules/comment/entities/comment.entity';
+import { EventImage } from './event-image.entity';
+import { EventUser } from './event-user.entity';
 
 @Entity('events')
 export class Event extends AuditableEntity {
@@ -29,7 +31,10 @@ export class Event extends AuditableEntity {
   location: string;
 
   @Column({ type: 'json' })
-  information: any;
+  information: Record<string, any>;
+
+  @Column({ type: 'float', default: 0 })
+  score: number;
 
   @Column({ name: 'host_id', type: 'uuid' })
   hostId: string;
@@ -38,11 +43,24 @@ export class Event extends AuditableEntity {
   @JoinColumn({ name: 'host_id' })
   host: User;
 
-  @OneToMany(() => EventCategory, (eventCategory) => eventCategory.event)
-  eventsCategories: EventCategory[];
+  @OneToMany(() => EventCategory, (eventCategory) => eventCategory.event, {
+    cascade: true,
+  })
+  eventCategories: EventCategory[];
 
-  @OneToMany(() => Comment, (comment) => comment.event)
+  @OneToMany(() => EventImage, (image) => image.event, { eager: true })
+  images: EventImage[];
+
+  @OneToMany(() => Comment, (comment) => comment.event, {
+    nullable: true,
+    cascade: true,
+  })
   comments: Comment[];
+
+  @OneToMany(() => EventUser, (eventUser) => eventUser.event, {
+    nullable: true,
+  })
+  guests: EventUser[];
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'created_by' })

@@ -7,7 +7,7 @@ export const getNotificationEmailTemplate = (message: string) => `
 `;
 
 // Plantilla para notificación de verificación de correo electrónico
-export const getVerificationEmailTemplate = (token: string, userId: string) => `
+export const getVerificationEmailTemplate = (token: string) => `
   <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
     <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden;">
       <div style="background-color: #4CAF50; color: #ffffff; padding: 20px; text-align: center;">
@@ -17,7 +17,7 @@ export const getVerificationEmailTemplate = (token: string, userId: string) => `
         <p style="font-size: 18px;">Hello,</p>
         <p style="font-size: 16px;">Please verify your email address by clicking the button below:</p>
         <div style="text-align: center; margin: 20px 0;">
-          <a href="https://yourapp.com/verify-email?token=${token}&userId=${userId}" 
+          <a href="${token}" 
              style="background-color: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-size: 16px;">
             Verify Email
           </a>
@@ -25,7 +25,27 @@ export const getVerificationEmailTemplate = (token: string, userId: string) => `
         <p style="font-size: 14px;">If you did not request this email, you can safely ignore it.</p>
       </div>
       <div style="background-color: #eeeeee; padding: 10px; text-align: center; font-size: 12px; color: #666666;">
-        <p>Thank you for choosing OurApp.</p>
+        <p>Thank you for choosing ParchingApp.</p>
+      </div>
+    </div>
+  </div>
+`;
+
+// Plantilla para verificación de Email Exitosamente
+export const VerificationEmailsuccessfulTemplate = () => `
+  <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+    <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden;">
+      <div style="background-color: #4CAF50; color: #ffffff; padding: 20px; text-align: center;">
+        <h1>Verification Successful</h1>
+      </div>
+      <div style="padding: 20px; color: #333333;">
+        <p style="font-size: 18px;">VERIFIED!,</p>
+        <p style="font-size: 16px;">You have verified your email, now you can use PARCHING APP to meet new people and places!</p>
+        <p style="font-size: 18px;">Enjoy it!</p>
+        </div>
+      </div>
+      <div style="background-color: #eeeeee; padding: 10px; text-align: center; font-size: 12px; color: #666666;">
+        <p>Thank you for choosing ParchingApp.</p>
       </div>
     </div>
   </div>
@@ -77,7 +97,7 @@ export const getWelcomeEmailTemplate = (userName: string) => `
         <h1>Welcome, ${userName}!</h1>
       </div>
       <div style="padding: 20px; color: #333333;">
-        <p style="font-size: 16px;">We're excited to have you on board at OurApp. Here, you'll find the best experiences and events tailored just for you.</p>
+        <p style="font-size: 16px;">We're excited to have you on board at ParchingApp. Here, you'll find the best experiences and events tailored just for you.</p>
         <p style="font-size: 16px;">Feel free to explore, and let us know if you need any help getting started.</p>
       </div>
       <div style="background-color: #eeeeee; padding: 10px; text-align: center; font-size: 12px; color: #666666;">

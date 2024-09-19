@@ -11,6 +11,7 @@ import { Role } from '../../role/entities/role.entity';
 import { Client } from 'src/modules/client/entities/client.entity';
 import { AuditableEntity } from 'src/common/entities/auditable.entity';
 import { Notification } from 'src/modules/notifications/entities/notification.entity';
+import { EventUser } from 'src/modules/event/entities/event-user.entity';
 
 @Entity('users')
 export class User extends AuditableEntity {
@@ -39,6 +40,9 @@ export class User extends AuditableEntity {
   @OneToOne(() => Client, (client) => client.user)
   client?: Client;
 
+  @ManyToOne(() => EventUser, (eventUser) => eventUser.user)
+  eventsUser: EventUser[];
+
   // campos para notificaciones
   @Column({ default: true })
   emailNotifications: boolean;
@@ -48,4 +52,10 @@ export class User extends AuditableEntity {
 
   @OneToMany(() => Notification, (notification) => notification.user)
   notifications: Notification[];
+
+  @Column({ default: false })
+  email_confirmed: boolean;
+
+  @Column({ default: true })
+  isActive: boolean;
 }
