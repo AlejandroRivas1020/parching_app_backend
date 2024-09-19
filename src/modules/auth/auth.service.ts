@@ -99,12 +99,9 @@ export class AuthService {
     const token = this.jwtService.sign(
       {
         id: savedUser.id,
-        email: savedUser.email,
       },
-      { expiresIn: '1h' },
+      { expiresIn: '10m' },
     );
-
-    console.log(token);
 
     const verificationUrl = `${process.env.BACKEND_URL}/auth/verify-email?token=${token}`;
 
@@ -113,10 +110,10 @@ export class AuthService {
       verificationUrl,
     );
 
-    await this.notificationService.sendWelcomeEmail(
-      savedUser.email,
-      savedUser.name,
-    );
+    // await this.notificationService.sendWelcomeEmail(
+    //   savedUser.email,
+    //   savedUser.name,
+    // );
 
     return savedUser;
   }
@@ -162,6 +159,10 @@ export class AuthService {
       // Marcar al usuario como activo
       user.email_confirmed = true;
       await this.userRepository.save(user);
+
+
+      await this.notificationService.sendWelcomeEmail(user.email, user.name);
+
     } catch (error) {
       throw new UnauthorizedException(
         error.name === 'TokenExpiredError'
