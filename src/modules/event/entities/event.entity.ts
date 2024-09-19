@@ -48,7 +48,7 @@ export class Event extends AuditableEntity {
   })
   eventCategories: EventCategory[];
 
-  @ManyToOne(() => EventImage, (image) => image.event, { eager: true })
+  @OneToMany(() => EventImage, (image) => image.event, { eager: true })
   images: EventImage[];
 
   @OneToMany(() => Comment, (comment) => comment.event, {
@@ -57,10 +57,10 @@ export class Event extends AuditableEntity {
   })
   comments: Comment[];
 
-  @ManyToOne(() => EventUser, (eventUser) => eventUser.event, {
+  @OneToMany(() => EventUser, (eventUser) => eventUser.event, {
     nullable: true,
   })
-  guests: EventUser;
+  guests: EventUser[];
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'created_by' })
