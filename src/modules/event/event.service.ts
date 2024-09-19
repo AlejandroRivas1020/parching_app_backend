@@ -9,7 +9,6 @@ import { Category } from '../category/entities';
 import { EventImage } from './entities/event-image.entity';
 import { EventCategory } from './entities/event-category.entity';
 import { Transactional } from 'src/common/decorators/transactional.decorator';
-import { EventUser } from './entities/event-user.entity';
 
 @Injectable()
 export class EventService {
@@ -20,12 +19,6 @@ export class EventService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
-    @InjectRepository(EventImage)
-    private readonly eventImageRepository: Repository<EventImage>,
-    @InjectRepository(EventCategory)
-    private readonly eventCategoryRepository: Repository<EventCategory>,
-    @InjectRepository(EventUser)
-    private readonly eventUser: Repository<EventUser>,
     private readonly dataSource: DataSource,
   ) {}
 
@@ -110,7 +103,7 @@ export class EventService {
     await queryRunner.manager.save(eventCategories);
 
     const eventImages = images.map((i) =>
-      this.eventImageRepository.create({
+      queryRunner.manager.create(EventImage, {
         image: i,
         event,
         createdBy,
