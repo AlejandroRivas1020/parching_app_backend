@@ -88,10 +88,21 @@ export class AuthService {
     // Guardar el cliente en la base de datos
     await this.clientRepository.save(newClient);
 
+<<<<<<< Updated upstream
     const token = this.jwtService.sign({
       id: savedUser.id,
       email: savedUser.email,
     });
+=======
+    const token = this.jwtService.sign(
+      {
+        id: savedUser.id,
+      },
+      { expiresIn: '10m' },
+    );
+
+    const verificationUrl = `${process.env.BACKEND_URL}/auth/verify-email?token=${token}`;
+>>>>>>> Stashed changes
 
     await this.notificationService.sendVerificationEmail(
       savedUser.email,
@@ -99,10 +110,10 @@ export class AuthService {
       token,
     );
 
-    await this.notificationService.sendWelcomeEmail(
-      savedUser.email,
-      savedUser.name,
-    );
+    // await this.notificationService.sendWelcomeEmail(
+    //   savedUser.email,
+    //   savedUser.name,
+    // );
 
     return savedUser;
   }
@@ -123,4 +134,38 @@ export class AuthService {
 
     return { accessToken };
   }
+<<<<<<< Updated upstream
+=======
+
+  async verifyEmailToken(token: string): Promise<void> {
+    try {
+      const payload = this.jwtService.verify(token, {
+        secret: process.env.JWT_SECRET,
+      });
+
+      const user = await this.userRepository.findOne({
+        where: { id: payload.id },
+      });
+      if (!user) {
+        throw new UnauthorizedException('User not found.');
+      }
+
+      if (user.email_confirmed) {
+        throw new UnauthorizedException('User is already active.');
+      }
+
+      // Marcar al usuario como activo
+      user.email_confirmed = true;
+      await this.userRepository.save(user);
+
+      await this.notificationService.sendWelcomeEmail(user.email, user.name);
+    } catch (error) {
+      throw new UnauthorizedException(
+        error.name === 'TokenExpiredError'
+          ? 'Token has expired.'
+          : 'Invalid or expired token.',
+      );
+    }
+  }
+>>>>>>> Stashed changes
 }

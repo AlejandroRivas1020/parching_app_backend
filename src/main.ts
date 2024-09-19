@@ -7,6 +7,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api'); // Prefijo global para los endpoints
 
+  app.enableCors({
+    origin: 'https://your-frontend-domain.com', // Reemplaza con el dominio de tu frontend
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  });
   // Swagger
   const config = new DocumentBuilder()
     .setTitle('ParchingApp Documentation')
