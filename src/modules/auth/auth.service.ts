@@ -1,14 +1,16 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Res, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../user/entities/user.entity';
-import { Client } from '../client/entities/client.entity';
+import { Client } from '../user/entities/client.entity';
 import { RegisterUserDto } from './dto/register-user-dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/login-user-dto';
 import { Role } from '../role/entities/role.entity';
 import { NotificationsService } from '../notifications/notifications.service';
+import { VerificationEmailsuccessfulTemplate } from '../notifications/notifications.template';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -110,11 +112,6 @@ export class AuthService {
       verificationUrl,
     );
 
-    // await this.notificationService.sendWelcomeEmail(
-    //   savedUser.email,
-    //   savedUser.name,
-    // );
-
     return savedUser;
   }
 
@@ -133,13 +130,13 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const payload = { sub: user.id, email: user.email, roleId: user.roleId };
+    const payload = { userId: user.id };
     const accessToken = this.jwtService.sign(payload);
 
     return { accessToken };
   }
 
-  async verifyEmailToken(token: string): Promise<void> {
+  async verifyEmailToken(token: string, @Res() res: Response): Promise<void> {
     try {
       const payload = this.jwtService.verify(token, {
         secret: process.env.JWT_SECRET,
@@ -159,10 +156,11 @@ export class AuthService {
       // Marcar al usuario como activo
       user.email_confirmed = true;
       await this.userRepository.save(user);
-
+      const htmlContent = VerificationEmailsuccessfulTemplate();
 
       await this.notificationService.sendWelcomeEmail(user.email, user.name);
-
+      res.setHeader('Content-Type', 'text/html');
+      res.send(htmlContent);
     } catch (error) {
       throw new UnauthorizedException(
         error.name === 'TokenExpiredError'

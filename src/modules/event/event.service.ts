@@ -22,7 +22,7 @@ export class EventService {
     private readonly dataSource: DataSource,
   ) {}
 
-  async create(createEventDto: CreateEventDto, userId: string) {
+  async create(createEventDto: CreateEventDto, userId?: string) {
     const {
       startDate,
       endDate,
@@ -35,7 +35,9 @@ export class EventService {
       images,
     } = createEventDto;
 
-    const createdBy = await this.userRepository.findOneBy({ id: userId });
+    const createdBy = await this.userRepository.findOneBy({
+      name: 'Admin User',
+    });
 
     if (!createdBy) throw new BadRequestException('User admin not found');
 
@@ -63,6 +65,24 @@ export class EventService {
       eventCategories,
       images,
     );
+  }
+
+  async findAll() {
+    return await this.eventRepository.find();
+  }
+
+  async findOne(id: string) {
+    return await this.eventRepository.findOneBy({ id });
+  }
+
+  update(id: string, updateEventDto: UpdateEventDto) {
+    console.log(updateEventDto);
+
+    return `This action updates a ${id} event`;
+  }
+
+  remove(id: number) {
+    return `This action removes a #${id} event`;
   }
 
   @Transactional()
@@ -114,23 +134,5 @@ export class EventService {
     await queryRunner.manager.save(eventImages);
 
     return 'Event created successfully';
-  }
-
-  async findAll() {
-    return await this.eventRepository.find();
-  }
-
-  async findOne(id: string) {
-    return await this.eventRepository.findOneBy({ id });
-  }
-
-  update(id: string, updateEventDto: UpdateEventDto) {
-    console.log(updateEventDto);
-
-    return `This action updates a ${id} event`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} event`;
   }
 }
