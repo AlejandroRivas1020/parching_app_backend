@@ -6,7 +6,7 @@ import {
   IsEnum,
   IsDateString,
 } from 'class-validator';
-import { Gender } from '../../client/enums/gender.enum';
+import { Gender } from '../../user/enums/gender.enum';
 
 export class RegisterUserDto {
   @ApiProperty({
@@ -32,13 +32,6 @@ export class RegisterUserDto {
   @IsString()
   @IsNotEmpty()
   password: string;
-
-  // @ApiProperty({
-  //   description: "URL or base64 encoded string of the user's profile picture",
-  //   example: 'https://example.com/profile.jpg',
-  // })
-  // @IsString()
-  // profilePicture: string;
 
   @ApiProperty({
     description: 'Address of the user',

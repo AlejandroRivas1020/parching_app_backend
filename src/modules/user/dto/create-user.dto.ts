@@ -9,7 +9,7 @@ import {
   IsNumber,
   IsEnum,
 } from 'class-validator';
-import { Gender } from 'src/modules/client/enums/gender.enum';
+import { Gender } from '../enums/gender.enum';
 
 export class CreateUserDto {
   @ApiProperty({

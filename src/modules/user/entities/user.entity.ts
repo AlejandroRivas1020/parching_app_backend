@@ -8,7 +8,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Role } from '../../role/entities/role.entity';
-import { Client } from 'src/modules/client/entities/client.entity';
+import { Client } from 'src/modules/user/entities/client.entity';
 import { AuditableEntity } from 'src/common/entities/auditable.entity';
 import { Notification } from 'src/modules/notifications/entities/notification.entity';
 import { EventUser } from 'src/modules/event/entities/event-user.entity';
