@@ -5,7 +5,6 @@ import { UserModule } from './modules/user/user.module';
 import { RoleModule } from './modules/role/role.module';
 import { PermissionModule } from './modules/permission/permission.module';
 import { EventModule } from './modules/event/event.module';
-import { CommentModule } from './modules/comment/comment.module';
 import { CommonModule } from './common/common.module';
 import { validationSchema } from './common/config/env.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -22,7 +21,6 @@ import { SeedersModule } from './modules/seeders/seeders.module';
     RoleModule,
     PermissionModule,
     EventModule,
-    CommentModule,
     CommonModule,
     CategoryModule,
     NotificationsModule,

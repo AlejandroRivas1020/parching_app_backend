@@ -5,7 +5,6 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   ParseUUIDPipe,
   UseInterceptors,
   UploadedFile,
@@ -87,20 +86,6 @@ export class UserController {
     }
 
     return updatedUser;
-  }
-
-  @Delete(':id')
-  @ApiOperation({ summary: 'Delete a user by ID' })
-  @ApiParam({
-    name: 'id',
-    type: String,
-    description: 'User ID',
-    example: '123e4567-e89b-12d3-a456-426614174000',
-  })
-  @ApiResponse({ status: 200, description: 'User deleted successfully.' })
-  @ApiResponse({ status: 404, description: 'User not found.' })
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.userService.remove(id);
   }
 
   @Patch(':id/notification-preferences')
