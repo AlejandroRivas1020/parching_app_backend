@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { Permission } from './entities/permission.entity';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
-import { User } from '../user/entities/user.entity'; // Asegúrate de que la ruta sea correcta
+import { User } from '../user/entities/user.entity';
 
 @Injectable()
 export class PermissionService {
@@ -13,7 +13,7 @@ export class PermissionService {
     private readonly permissionRepository: Repository<Permission>,
 
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>, // Inyectar el repositorio de User
+    private readonly userRepository: Repository<User>,
   ) {}
 
   async create(createPermissionDto: CreatePermissionDto): Promise<Permission> {
@@ -47,11 +47,11 @@ export class PermissionService {
   async findUserPermissions(userId: string): Promise<Permission[]> {
     const user = await this.userRepository.findOne({
       where: { id: userId },
-      relations: ['role'], // Asegúrate de que se carga el rol
+      relations: ['role'],
     });
 
     if (!user || !user.role) {
-      return []; // O lanzar un error si lo prefieres
+      return [];
     }
 
     return this.permissionRepository.find({
