@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
-import { Client } from '../client/entities/client.entity';
+import { Client } from './entities/client.entity';
 
 @Injectable()
 export class UserService {
