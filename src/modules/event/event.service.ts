@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository, DataSource, type QueryRunner } from 'typeorm';
+import { In, Repository, DataSource, QueryRunner } from 'typeorm';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { User } from '../user/entities/user.entity';
@@ -9,6 +9,8 @@ import { Category } from '../category/entities';
 import { EventImage } from './entities/event-image.entity';
 import { EventCategory } from './entities/event-category.entity';
 import { Transactional } from 'src/common/decorators/transactional.decorator';
+import type { GetEventsQueryDto } from './dto/get-events-query.dto';
+import type { EventState } from './enums/event-state.enum';
 
 @Injectable()
 export class EventService {
@@ -67,8 +69,41 @@ export class EventService {
     );
   }
 
-  async findAll() {
-    return await this.eventRepository.find();
+  async findAll(query: GetEventsQueryDto, userId: string) {
+    const { categoryId, userType, eventsState } = query;
+
+    let baseQuery = this.eventRepository
+      .createQueryBuilder('event')
+      .where('event.state = :state', { state: eventsState })
+      .innerJoin('event.eventCategories', 'eventCategory')
+      .innerJoinAndSelect('eventCategory.category', 'category');
+
+    if (categoryId) {
+      baseQuery = baseQuery.andWhere('category.id = :categoryId', {
+        categoryId,
+      });
+    }
+
+    if (userType) {
+      const user = await this.userRepository.findOneBy({ name: 'Admin User' });
+
+      baseQuery =
+        userType == 'host'
+          ? baseQuery
+              .innerJoin('event.host', 'host')
+              .andWhere('host.id = :userId', { userId: user.id })
+          : baseQuery
+              .innerJoin('event.guests', 'guest')
+              .andWhere('guest.id = :userId', { userId: user.id });
+    }
+    return await baseQuery.getMany();
+  }
+
+  async getJoined(userId: string, state: EventState) {
+    return await this.eventRepository.findBy({
+      state,
+      guests: { id: userId },
+    });
   }
 
   async findOne(id: string) {
@@ -81,9 +116,9 @@ export class EventService {
     return `This action updates a ${id} event`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} event`;
-  }
+  async subscribeTo(eventId: string, userId: string) {}
+
+  async unsubscribeFrom(eventId: string, userId: string) {}
 
   @Transactional()
   private async createEvent(

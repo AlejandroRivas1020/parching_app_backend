@@ -18,9 +18,7 @@ export class Category extends AuditableEntity {
   @Column({ type: 'varchar', length: 100, unique: true })
   name: string;
 
-  @OneToMany(() => EventCategory, (eventCategory) => eventCategory.category, {
-    eager: true,
-  })
+  @OneToMany(() => EventCategory, (eventCategory) => eventCategory.category)
   eventsCategories: EventCategory[];
 
   @OneToMany(() => FormTemplate, (formTemplate) => formTemplate.category, {

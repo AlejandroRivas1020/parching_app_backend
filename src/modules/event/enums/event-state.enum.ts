@@ -1,5 +1,5 @@
 export enum EventState {
-  active = 'active',
-  closed = 'closed',
-  cancelled = 'cancelled',
+  ACTIVE = 'active',
+  CLOSED = 'closed',
+  CANCELLED = 'cancelled',
 }

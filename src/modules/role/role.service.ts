@@ -45,10 +45,4 @@ export class RoleService {
 
     return await this.roleRepository.save(role);
   }
-
-  // Eliminar un rol
-  async remove(id: string): Promise<void> {
-    const role = await this.findOne(id);
-    await this.roleRepository.remove(role);
-  }
 }
