@@ -40,7 +40,7 @@ export class Event extends AuditableEntity {
   @Column({
     type: 'enum',
     enum: EventState,
-    default: EventState.active,
+    default: EventState.ACTIVE,
   })
   state: EventState;
 
@@ -53,6 +53,7 @@ export class Event extends AuditableEntity {
 
   @OneToMany(() => EventCategory, (eventCategory) => eventCategory.event, {
     cascade: true,
+    eager: true,
   })
   eventCategories: EventCategory[];
 
