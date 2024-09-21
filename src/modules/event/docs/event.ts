@@ -44,3 +44,43 @@ export function UpdateEvent() {
     ApiBody({ type: UpdateEventDto }),
   );
 }
+
+export function Subscribe() {
+  return applyDecorators(
+    ApiOperation({ summary: 'Subscribe to an event' }),
+    ApiResponse({
+      status: 200,
+      description: 'User subscribed to event successfully',
+    }),
+    ApiQuery({
+      description: 'User ID',
+      required: true,
+      name: 'userId',
+    }),
+    ApiQuery({
+      description: 'Event ID',
+      required: true,
+      name: 'eventId',
+    }),
+  );
+}
+
+export function RemoveGuest() {
+  return applyDecorators(
+    ApiOperation({ summary: 'Remove guest from an event' }),
+    ApiResponse({
+      status: 200,
+      description: 'User removed from event successfully',
+    }),
+    ApiQuery({
+      description: 'User ID',
+      required: true,
+      name: 'userId',
+    }),
+    ApiQuery({
+      description: 'Event ID',
+      required: true,
+      name: 'eventId',
+    }),
+  );
+}

@@ -29,7 +29,6 @@ import { SeedersModule } from './modules/seeders/seeders.module';
       isGlobal: true,
       validationSchema,
       envFilePath: '.env',
-      // validationSchema,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],

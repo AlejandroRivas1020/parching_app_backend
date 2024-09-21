@@ -1,16 +1,15 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository, DataSource, QueryRunner } from 'typeorm';
-import { CreateEventDto } from './dto/create-event.dto';
-import { UpdateEventDto } from './dto/update-event.dto';
+import { CreateEventDto, UpdateEventDto, GetEventsQueryDto } from './dto';
+import { Event, EventUser, EventImage, EventCategory } from './entities';
 import { User } from '../user/entities/user.entity';
-import { Event } from './entities/event.entity';
 import { Category } from '../category/entities';
-import { EventImage } from './entities/event-image.entity';
-import { EventCategory } from './entities/event-category.entity';
 import { Transactional } from 'src/common/decorators/transactional.decorator';
-import type { GetEventsQueryDto } from './dto/get-events-query.dto';
-import type { EventState } from './enums/event-state.enum';
 
 @Injectable()
 export class EventService {
@@ -21,7 +20,8 @@ export class EventService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
-    private readonly dataSource: DataSource,
+    @InjectRepository(EventUser)
+    private readonly eventUserRepository: Repository<EventUser>,
   ) {}
 
   async create(createEventDto: CreateEventDto, userId?: string) {
@@ -99,13 +99,6 @@ export class EventService {
     return await baseQuery.getMany();
   }
 
-  async getJoined(userId: string, state: EventState) {
-    return await this.eventRepository.findBy({
-      state,
-      guests: { id: userId },
-    });
-  }
-
   async findOne(id: string) {
     return await this.eventRepository.findOneBy({ id });
   }
@@ -116,9 +109,44 @@ export class EventService {
     return `This action updates a ${id} event`;
   }
 
-  async subscribeTo(eventId: string, userId: string) {}
+  async subscribeTo(eventId: string, userId: string) {
+    const event = await this.eventRepository.findOne({
+      where: { id: eventId },
+      relations: ['guests'],
+    });
 
-  async unsubscribeFrom(eventId: string, userId: string) {}
+    const user = await this.userRepository.findOneBy({ id: userId });
+
+    if (event.guests) {
+      if (event.guests.some((g) => g.userId === userId)) {
+        throw new BadRequestException('User already in the event');
+      }
+
+      if (event.guests.length == event.capacity) {
+        throw new BadRequestException('Event is at full capacity');
+      }
+    }
+
+    const eventUser = this.eventUserRepository.create({ user, event });
+
+    await this.eventUserRepository.save(eventUser);
+
+    return 'User subscribed to event successfully';
+  }
+
+  async unsubscribeFrom(eventId: string, userId: string) {
+    const eventUser = await this.eventUserRepository.findOneBy({
+      event: { id: eventId },
+      user: { id: userId },
+    });
+
+    if (eventUser) {
+      await this.eventUserRepository.remove(eventUser);
+      return 'User removed from event successfully';
+    } else {
+      throw new NotFoundException('Guest not found in the event');
+    }
+  }
 
   @Transactional()
   private async createEvent(
