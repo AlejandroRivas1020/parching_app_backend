@@ -5,8 +5,6 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
-  HttpCode,
   HttpStatus,
 } from '@nestjs/common';
 import { RoleService } from './role.service';
@@ -58,16 +56,5 @@ export class RoleController {
     @Body() updateRoleDto: UpdateRoleDto,
   ): Promise<Role> {
     return this.roleService.update(id, updateRoleDto);
-  }
-
-  @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({ summary: 'Delete a role' })
-  @ApiResponse({
-    status: HttpStatus.NO_CONTENT,
-    description: 'Role deleted successfully.',
-  })
-  remove(@Param('id') id: string): Promise<void> {
-    return this.roleService.remove(id);
   }
 }

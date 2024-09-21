@@ -9,7 +9,6 @@ import {
 import { AuditableEntity } from 'src/common/entities/auditable.entity';
 import { User } from 'src/modules/user/entities/user.entity';
 import { EventCategory } from './event-category.entity';
-import { Comment } from 'src/modules/comment/entities/comment.entity';
 import { EventImage } from './event-image.entity';
 import { EventUser } from './event-user.entity';
 import { EventState } from '../enums/event-state.enum';
@@ -58,12 +57,6 @@ export class Event extends AuditableEntity {
 
   @OneToMany(() => EventImage, (image) => image.event, { eager: true })
   images: EventImage[];
-
-  @OneToMany(() => Comment, (comment) => comment.event, {
-    nullable: true,
-    cascade: true,
-  })
-  comments: Comment[];
 
   @OneToMany(() => EventUser, (eventUser) => eventUser.event, {
     nullable: true,

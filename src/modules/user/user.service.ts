@@ -68,14 +68,6 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  // Método para eliminar un usuario por ID
-  async remove(id: string) {
-    const user = await this.userRepository.delete(id);
-    if (user.affected === 0) {
-      throw new NotFoundException(`User is not found`);
-    }
-  }
-
   // Nueva lógica para actualizar las preferencias de notificaciones
   async updateNotificationPreferences(
     userId: string,
