@@ -1,4 +1,3 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString, IsEnum } from 'class-validator';
 import { EventState } from '../enums/event-state.enum';
 import { UserType } from '../enums/user-type.enum';
