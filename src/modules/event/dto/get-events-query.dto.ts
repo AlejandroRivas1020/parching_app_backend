@@ -14,7 +14,8 @@ export class GetEventsQueryDto {
   @Transform(({ value }) => value, { toClassOnly: true })
   userType?: UserType;
 
+  @IsOptional()
   @IsEnum(EventState)
   @Transform(({ value }) => value, { toClassOnly: true })
-  eventsState: EventState;
+  eventsState?: EventState;
 }

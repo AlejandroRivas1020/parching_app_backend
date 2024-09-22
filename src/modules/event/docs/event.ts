@@ -31,7 +31,7 @@ export function GetAllEvents() {
     ApiQuery({
       enum: EventState,
       description: 'Event state to filter by',
-      required: true,
+      required: false,
       name: 'eventsState',
     }),
   );
@@ -42,5 +42,45 @@ export function UpdateEvent() {
     ApiOperation({ summary: 'Update an event' }),
     ApiResponse({ status: 200, description: 'Event updated' }),
     ApiBody({ type: UpdateEventDto }),
+  );
+}
+
+export function Subscribe() {
+  return applyDecorators(
+    ApiOperation({ summary: 'Subscribe to an event' }),
+    ApiResponse({
+      status: 200,
+      description: 'User subscribed to event successfully',
+    }),
+    ApiQuery({
+      description: 'User ID',
+      required: true,
+      name: 'userId',
+    }),
+    ApiQuery({
+      description: 'Event ID',
+      required: true,
+      name: 'eventId',
+    }),
+  );
+}
+
+export function RemoveGuest() {
+  return applyDecorators(
+    ApiOperation({ summary: 'Remove guest from an event' }),
+    ApiResponse({
+      status: 200,
+      description: 'User removed from event successfully',
+    }),
+    ApiQuery({
+      description: 'User ID',
+      required: true,
+      name: 'userId',
+    }),
+    ApiQuery({
+      description: 'Event ID',
+      required: true,
+      name: 'eventId',
+    }),
   );
 }

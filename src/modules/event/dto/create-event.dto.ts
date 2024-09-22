@@ -49,7 +49,7 @@ export class CreateEventDto {
   location: string;
 
   @ApiProperty({
-    description: 'Filled form of the respective category',
+    description: 'Filled form of at least one of the respective categories',
     example: {
       name: 'hello world',
       email: 'hello.world@gmail.com',
