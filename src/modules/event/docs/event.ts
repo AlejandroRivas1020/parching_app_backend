@@ -31,7 +31,7 @@ export function GetAllEvents() {
     ApiQuery({
       enum: EventState,
       description: 'Event state to filter by',
-      required: true,
+      required: false,
       name: 'eventsState',
     }),
   );

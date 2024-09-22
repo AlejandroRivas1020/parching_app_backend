@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository, DataSource, QueryRunner } from 'typeorm';
+import { In, Repository, QueryRunner } from 'typeorm';
 import { CreateEventDto, UpdateEventDto, GetEventsQueryDto } from './dto';
 import { Event, EventUser, EventImage, EventCategory } from './entities';
 import { User } from '../user/entities/user.entity';
@@ -74,13 +74,18 @@ export class EventService {
 
     let baseQuery = this.eventRepository
       .createQueryBuilder('event')
-      .where('event.state = :state', { state: eventsState })
       .innerJoin('event.eventCategories', 'eventCategory')
       .innerJoinAndSelect('eventCategory.category', 'category');
 
     if (categoryId) {
       baseQuery = baseQuery.andWhere('category.id = :categoryId', {
         categoryId,
+      });
+    }
+
+    if (eventsState) {
+      baseQuery = baseQuery.andWhere('event.state = :state', {
+        state: eventsState,
       });
     }
 
@@ -103,10 +108,14 @@ export class EventService {
     return await this.eventRepository.findOneBy({ id });
   }
 
-  update(id: string, updateEventDto: UpdateEventDto) {
-    console.log(updateEventDto);
+  async update(id: string, updateEventDto: UpdateEventDto) {
+    const event = await this.eventRepository.findOneBy({ id });
 
-    return `This action updates a ${id} event`;
+    if (!event) throw new NotFoundException('Event not found');
+
+    await this.eventRepository.update({ id }, updateEventDto);
+
+    return `Event updated successfully`;
   }
 
   async subscribeTo(eventId: string, userId: string) {
@@ -197,5 +206,12 @@ export class EventService {
     await queryRunner.manager.save(eventImages);
 
     return 'Event created successfully';
+  }
+
+  private validateHost(userId: string, event: Event) {
+    if (event.hostId === userId) {
+      return true;
+    }
+    return false;
   }
 }
