@@ -77,6 +77,7 @@ export class EventService {
     let baseQuery = this.eventRepository
       .createQueryBuilder('event')
       .innerJoin('event.eventCategories', 'eventCategory')
+      .innerJoinAndSelect('event.images', 'images')
       .innerJoinAndSelect('eventCategory.category', 'category');
 
     if (categoryId) {
@@ -99,7 +100,8 @@ export class EventService {
               .andWhere('host.id = :userId', { userId })
           : baseQuery
               .innerJoin('event.guests', 'guest')
-              .andWhere('guest.id = :userId', { userId });
+              .innerJoin('guest.user', 'user')
+              .andWhere('user.id = :userId', { userId });
     }
     return await baseQuery.getMany();
   }
@@ -172,6 +174,7 @@ export class EventService {
     });
 
     if (eventUser) {
+      // event.guests.pop(eventUser);
       await this.eventUserRepository.remove(eventUser);
       event.capacity += 1;
       await this.eventRepository.save(event);
