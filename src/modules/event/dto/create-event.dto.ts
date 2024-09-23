@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
   ArrayMaxSize,
@@ -9,6 +9,7 @@ import {
   IsInt,
   IsNotEmpty,
   IsObject,
+  IsOptional,
   IsString,
   IsUUID,
   Min,
@@ -62,10 +63,7 @@ export class CreateEventDto {
 
   @ApiProperty({
     description: 'Array of categories ids (allows only one to be sent)',
-    example: [
-      '76e75588-1462-4b3a-b0e4-be6d0d1983e3',
-      '5ba0d592-1b18-4831-b63b-800f6659978b',
-    ],
+    example: ['category id 1', 'category id 2'],
   })
   @IsArray()
   @ArrayMinSize(1)
@@ -80,17 +78,18 @@ export class CreateEventDto {
   @IsBoolean()
   isAdmin: boolean;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description:
       'Id of the host of the event if an admin is creating an event for another user',
-    example: '93febb35-5fb9-4710-b048-d57a51713644',
+    example: 'user id',
   })
+  @IsOptional()
   @IsNotEmpty()
   @IsUUID()
   host?: string;
 
   @ApiProperty({
-    description: 'Urls of event images',
+    description: 'Urls of event images, minimum 1, maximum 5',
     type: [String],
     minItems: 1,
     maxItems: 5,
