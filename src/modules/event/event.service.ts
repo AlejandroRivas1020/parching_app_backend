@@ -71,8 +71,8 @@ export class EventService {
     );
   }
 
-  async findAll(query: GetEventsQueryDto, userId: string) {
-    const { categoryId, userType, eventsState } = query;
+  async findAll(query: GetEventsQueryDto) {
+    const { categoryId, userType, eventsState, userId } = query;
 
     let baseQuery = this.eventRepository
       .createQueryBuilder('event')
@@ -92,16 +92,14 @@ export class EventService {
     }
 
     if (userType) {
-      const user = await this.userRepository.findOneBy({ name: 'Admin User' });
-
       baseQuery =
         userType == 'host'
           ? baseQuery
               .innerJoin('event.host', 'host')
-              .andWhere('host.id = :userId', { userId: user.id })
+              .andWhere('host.id = :userId', { userId })
           : baseQuery
               .innerJoin('event.guests', 'guest')
-              .andWhere('guest.id = :userId', { userId: user.id });
+              .andWhere('guest.id = :userId', { userId });
     }
     return await baseQuery.getMany();
   }

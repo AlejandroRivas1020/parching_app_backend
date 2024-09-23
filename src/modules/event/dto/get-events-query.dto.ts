@@ -1,13 +1,16 @@
-import { IsOptional, IsString, IsEnum } from 'class-validator';
+import { IsOptional, IsEnum, IsUUID } from 'class-validator';
 import { EventState } from '../enums/event-state.enum';
 import { UserType } from '../enums/user-type.enum';
 import { Transform } from 'class-transformer';
 
 export class GetEventsQueryDto {
   @IsOptional()
-  @IsString()
-  @Transform(({ value }) => value, { toClassOnly: true })
+  @IsUUID()
   categoryId?: string;
+
+  @IsOptional()
+  @IsUUID()
+  userId?: string;
 
   @IsOptional()
   @IsEnum(UserType)
