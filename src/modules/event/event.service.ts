@@ -4,12 +4,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository, QueryRunner } from 'typeorm';
+import { In, Repository, QueryRunner, DataSource } from 'typeorm';
 import { CreateEventDto, UpdateEventDto, GetEventsQueryDto } from './dto';
 import { Event, EventUser, EventImage, EventCategory } from './entities';
 import { User } from '../user/entities/user.entity';
 import { Category } from '../category/entities';
 import { Transactional } from 'src/common/decorators/transactional.decorator';
+import { EventState } from './enums/event-state.enum';
 
 @Injectable()
 export class EventService {
@@ -22,6 +23,7 @@ export class EventService {
     private readonly categoryRepository: Repository<Category>,
     @InjectRepository(EventUser)
     private readonly eventUserRepository: Repository<EventUser>,
+    private readonly dataSource: DataSource,
   ) {}
 
   async create(createEventDto: CreateEventDto, userId?: string) {
@@ -105,7 +107,10 @@ export class EventService {
   }
 
   async findOne(id: string) {
-    return await this.eventRepository.findOneBy({ id });
+    return await this.eventRepository.findOne({
+      where: { id },
+      relations: ['guests', 'images', 'eventCategories'],
+    });
   }
 
   async update(id: string, updateEventDto: UpdateEventDto) {
@@ -127,23 +132,42 @@ export class EventService {
     const user = await this.userRepository.findOneBy({ id: userId });
 
     if (event.guests) {
-      if (event.guests.some((g) => g.userId === userId)) {
+      if (
+        event.guests.some((g) => g.userId === userId) ||
+        event.hostId === userId
+      ) {
         throw new BadRequestException('User already in the event');
       }
 
-      if (event.guests.length == event.capacity) {
+      if (event.capacity === 0) {
         throw new BadRequestException('Event is at full capacity');
       }
+
+      if (
+        event.state == EventState.CANCELLED ||
+        event.state == EventState.CLOSED
+      )
+        throw new BadRequestException('Event is closed or cancelled');
     }
 
-    const eventUser = this.eventUserRepository.create({ user, event });
+    const eventUser = this.eventUserRepository.create({
+      user,
+      event,
+      createdBy: user,
+      updatedBy: user,
+    });
 
     await this.eventUserRepository.save(eventUser);
+
+    event.capacity -= 1;
+    event.guests.push(eventUser);
+    await this.eventRepository.save(event);
 
     return 'User subscribed to event successfully';
   }
 
   async unsubscribeFrom(eventId: string, userId: string) {
+    const event = await this.eventRepository.findOneBy({ id: eventId });
     const eventUser = await this.eventUserRepository.findOneBy({
       event: { id: eventId },
       user: { id: userId },
@@ -151,6 +175,8 @@ export class EventService {
 
     if (eventUser) {
       await this.eventUserRepository.remove(eventUser);
+      event.capacity += 1;
+      await this.eventRepository.save(event);
       return 'User removed from event successfully';
     } else {
       throw new NotFoundException('Guest not found in the event');
