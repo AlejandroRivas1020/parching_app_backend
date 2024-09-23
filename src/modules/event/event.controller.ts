@@ -41,8 +41,8 @@ export class EventController {
 
   @GetAllEvents()
   @Get()
-  findAll(@Query() query: GetEventsQueryDto, userId?: string) {
-    return this.eventService.findAll(query, userId);
+  findAll(@Query() query: GetEventsQueryDto) {
+    return this.eventService.findAll(query);
   }
 
   @Get(':id')
