@@ -2,6 +2,7 @@ import {
   IsEnum,
   IsInt,
   IsNotEmpty,
+  IsObject,
   IsOptional,
   IsString,
   Min,
@@ -52,4 +53,17 @@ export class UpdateEventDto {
   @IsNotEmpty()
   @IsString()
   location?: string;
+
+  @ApiPropertyOptional({
+    description: 'Filled form of at least one of the respective categories',
+    example: {
+      name: 'hello world',
+      email: 'hello.world@gmail.com',
+      location: 'Cr 31 No. 32-75, C.P 68001 Bucaramanga',
+    },
+  })
+  @IsOptional()
+  @IsNotEmpty()
+  @IsObject()
+  information?: Record<string, any>;
 }
