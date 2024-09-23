@@ -25,8 +25,13 @@ export function GetAllEvents() {
     ApiQuery({
       enum: UserType,
       required: false,
-      description: 'Role of the user in searching events',
+      description: 'Role of the user in searching events (guest or host)',
       name: 'userType',
+    }),
+    ApiQuery({
+      required: false,
+      description: 'User ID to search events by',
+      name: 'userId',
     }),
     ApiQuery({
       enum: EventState,
