@@ -77,6 +77,7 @@ export class EventService {
     let baseQuery = this.eventRepository
       .createQueryBuilder('event')
       .innerJoin('event.eventCategories', 'eventCategory')
+      .innerJoinAndSelect('event.images', 'images')
       .innerJoinAndSelect('eventCategory.category', 'category');
 
     if (categoryId) {
