@@ -8,7 +8,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api'); // Prefijo global para los endpoints
 
   app.enableCors({
-    origin: 'https://parchingapp.vercel.app',
+    origin: ['https://parchingapp.vercel.app', 'http://localhost:3000'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
